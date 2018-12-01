@@ -1,7 +1,7 @@
 package lexer;
 
 public class Token {
-    enum TokenType {
+    public enum TokenType {
         INTEGER, REAL_NUMBER, STRING, PUNCTUATION, KEYWORD, TYPE, BOOLEAN, OPERATOR, WHITE_SPACE, IDENTIFIER, RATIONAL_NUMBER, COMPLEX_NUMBER
     };
 

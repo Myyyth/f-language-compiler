@@ -1,19 +1,30 @@
 package parser;
 
 import java.util.ArrayList;
+import lexer.Token;
 
 public class Parser {
-    private ArrayList<String> tokens;
+    private ArrayList<Token> tokens;
     private int globalIterator;
 
-    public Parser(ArrayList<String> tokens) {
+    public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
         this.globalIterator = -1;
     }
 
     public Tree parse() {
-        globalIterator++;
+        deleteWhitespaces();
         return program();
+    }
+
+    private void deleteWhitespaces() {
+        ArrayList<Token> modified = new ArrayList<Token>();
+        for (Token token: tokens) {
+            if (token.getType() != Token.TokenType.WHITE_SPACE) {
+                modified.add(token);
+            }
+        }
+        this.tokens = modified;
     }
 
     private Tree rightmost(Tree tree) {
@@ -31,8 +42,11 @@ public class Parser {
             Tree right = new Tree();
             local.setRight(right);
             globalIterator++;
-            while (tokens.get(globalIterator).equals(";")) {
+            while (tokens.get(globalIterator).getLexeme().equals(";")) {
                 right.setValue(tokens.get(globalIterator));
+                if (globalIterator >= tokens.size() - 1) {
+                    break;
+                }
                 localIterator = globalIterator;
                 right.setRight(declaration());
                 if (right.getRight() == null) {
@@ -51,13 +65,14 @@ public class Parser {
 
     private Tree declaration() {
         int localIterator = globalIterator;
-        Tree left = identifier();
-        if (left != null) {
+        globalIterator++;
+        if (tokens.get(globalIterator).getType() == Token.TokenType.IDENTIFIER) {
+            Tree left = new Tree(null, null, tokens.get(globalIterator));
             Tree local = new Tree();
             Tree right = new Tree();
             local.setRight(right);
             globalIterator++;
-            if (tokens.get(globalIterator).equals(":")) {
+            if (tokens.get(globalIterator).getLexeme().equals(":")) {
                 right.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right.setRight(type());
@@ -70,7 +85,7 @@ public class Parser {
                 globalIterator--;
             }
             globalIterator++;
-            if (tokens.get(globalIterator).equals("is")) {
+            if (tokens.get(globalIterator).getLexeme().equals("is")) {
                 right.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right.setRight(expression());
@@ -93,7 +108,7 @@ public class Parser {
             Tree right = new Tree();
             local.setRight(right);
             globalIterator++;
-            while (tokens.get(globalIterator).equals(",")) {
+            while (tokens.get(globalIterator).getLexeme().equals(",")) {
                 right.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right.setRight(expression());
@@ -119,8 +134,8 @@ public class Parser {
         if (left != null) {
             Tree right = new Tree();
             globalIterator++;
-            if (tokens.get(globalIterator).equals("and") || tokens.get(globalIterator).equals("or") ||
-                    tokens.get(globalIterator).equals("xor")) {
+            if (tokens.get(globalIterator).getLexeme().equals("and") || tokens.get(globalIterator).getLexeme().equals("or") ||
+                    tokens.get(globalIterator).getLexeme().equals("xor")) {
                 right.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right.setRight(relation());
@@ -145,9 +160,9 @@ public class Parser {
         if (left != null) {
             Tree right = new Tree();
             globalIterator++;
-            if (tokens.get(globalIterator).equals("<") || tokens.get(globalIterator).equals("<=") ||
-                    tokens.get(globalIterator).equals(">") || tokens.get(globalIterator).equals(">=") ||
-                    tokens.get(globalIterator).equals("=") || tokens.get(globalIterator).equals("/=")) {
+            if (tokens.get(globalIterator).getLexeme().equals("<") || tokens.get(globalIterator).getLexeme().equals("<=") ||
+                    tokens.get(globalIterator).getLexeme().equals(">") || tokens.get(globalIterator).getLexeme().equals(">=") ||
+                    tokens.get(globalIterator).getLexeme().equals("=") || tokens.get(globalIterator).getLexeme().equals("/=")) {
                 right.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right.setRight(factor());
@@ -173,7 +188,7 @@ public class Parser {
             Tree right = new Tree();
             local.setRight(right);
             globalIterator++;
-            while (tokens.get(globalIterator).equals("+") || tokens.get(globalIterator).equals("-")) {
+            while (tokens.get(globalIterator).getLexeme().equals("+") || tokens.get(globalIterator).getLexeme().equals("-")) {
                 right.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right.setRight(term());
@@ -202,7 +217,7 @@ public class Parser {
             Tree right = new Tree();
             local.setRight(right);
             globalIterator++;
-            while (tokens.get(globalIterator).equals("*") || tokens.get(globalIterator).equals("/")) {
+            while (tokens.get(globalIterator).getLexeme().equals("*") || tokens.get(globalIterator).getLexeme().equals("/")) {
                 right.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right.setRight(unary());
@@ -227,7 +242,7 @@ public class Parser {
         int localIterator = globalIterator;
         Tree local = new Tree();
         globalIterator++;
-        if (tokens.get(globalIterator).equals("+") || tokens.get(globalIterator).equals("-")) {
+        if (tokens.get(globalIterator).getLexeme().equals("+") || tokens.get(globalIterator).getLexeme().equals("-")) {
             local.setValue(tokens.get(globalIterator));
         } else {
             globalIterator--;
@@ -296,7 +311,7 @@ public class Parser {
             globalIterator = localIterator;
         }
         globalIterator++;
-        if (tokens.get(globalIterator).equals("(")) {
+        if (tokens.get(globalIterator).getLexeme().equals("(")) {
             Tree local = new Tree();
             local.setValue(tokens.get(globalIterator));
             Tree right = new Tree();
@@ -309,7 +324,7 @@ public class Parser {
                 return null;
             }
             globalIterator++;
-            if (tokens.get(globalIterator).equals(")")) {
+            if (tokens.get(globalIterator).getLexeme().equals(")")) {
                 right.setValue(tokens.get(globalIterator));
                 return local;
             }
@@ -323,7 +338,7 @@ public class Parser {
     private Tree tail() {
         int localIterator = globalIterator;
         globalIterator++;
-        if (tokens.get(globalIterator).equals("(")) {
+        if (tokens.get(globalIterator).getLexeme().equals("(")) {
             Tree local = new Tree();
             local.setValue(tokens.get(globalIterator));
             Tree right = new Tree();
@@ -334,14 +349,14 @@ public class Parser {
                 globalIterator = localIterator;
             }
             globalIterator++;
-            if (tokens.get(globalIterator).equals(")")) {
+            if (tokens.get(globalIterator).getLexeme().equals(")")) {
                 right.setValue(tokens.get(globalIterator));
                 return local;
             }
             globalIterator--;
             return null;
         }
-        if (tokens.get(globalIterator).equals("[")) {
+        if (tokens.get(globalIterator).getLexeme().equals("[")) {
             Tree local = new Tree();
             local.setValue(tokens.get(globalIterator));
             Tree right = new Tree();
@@ -353,29 +368,33 @@ public class Parser {
                 return null;
             }
             globalIterator++;
-            if (tokens.get(globalIterator).equals("]")) {
+            if (tokens.get(globalIterator).getLexeme().equals("]")) {
                 right.setValue(tokens.get(globalIterator));
                 return local;
             }
             globalIterator--;
             return null;
         }
-        if (tokens.get(globalIterator).equals(".")) {
+        if (tokens.get(globalIterator).getLexeme().equals(".")) {
             Tree local = new Tree();
             local.setValue(tokens.get(globalIterator));
             Tree right = new Tree();
             local.setRight(right);
-            localIterator = globalIterator;
-            right.setLeft(identifier());
-            if (right.getLeft() == null) {
-                globalIterator = localIterator;
+            globalIterator++;
+            if (tokens.get(globalIterator).getType() != Token.TokenType.IDENTIFIER) {
+                globalIterator--;
+            } else {
+                right.setLeft(new Tree(null, null, tokens.get(globalIterator)));
+                return local;
             }
-            right.setLeft(integerLiteral());
-            if (right.getLeft() == null) {
-                globalIterator = localIterator;
+            globalIterator++;
+            if (tokens.get(globalIterator).getType() != Token.TokenType.INTEGER) {
+                globalIterator--;
                 return null;
+            } else {
+                right.setLeft(new Tree(null, null, tokens.get(globalIterator)));
+                return local;
             }
-            return local;
         }
         globalIterator--;
         return null;
@@ -384,40 +403,28 @@ public class Parser {
     private Tree elementary() {
         int localIterator = globalIterator;
         globalIterator++;
-        if (tokens.get(globalIterator).equals("false") || tokens.get(globalIterator).equals("true")) {
+        if (tokens.get(globalIterator).getLexeme().equals("false") || tokens.get(globalIterator).getLexeme().equals("true")) {
+            return new Tree(null, null, tokens.get(globalIterator));
+        }
+        if (tokens.get(globalIterator).getType() == Token.TokenType.INTEGER) {
+            return new Tree(null, null, tokens.get(globalIterator));
+        }
+        if (tokens.get(globalIterator).getType() == Token.TokenType.REAL_NUMBER) {
+            return new Tree(null, null, tokens.get(globalIterator));
+        }
+        if (tokens.get(globalIterator).getType() == Token.TokenType.RATIONAL_NUMBER) {
+            return new Tree(null, null, tokens.get(globalIterator));
+        }
+        if (tokens.get(globalIterator).getType() == Token.TokenType.COMPLEX_NUMBER) {
+            return new Tree(null, null, tokens.get(globalIterator));
+        }
+        if (tokens.get(globalIterator).getType() == Token.TokenType.STRING) {
+            return new Tree(null, null, tokens.get(globalIterator));
+        }
+        if (tokens.get(globalIterator).getType() == Token.TokenType.IDENTIFIER) {
             return new Tree(null, null, tokens.get(globalIterator));
         }
         globalIterator--;
-        Tree local = integerLiteral();
-        if (local != null) {
-            return local;
-        }
-        globalIterator = localIterator;
-        local = realLiteral();
-        if (local != null) {
-            return local;
-        }
-        globalIterator = localIterator;
-        local = rationalLiteral();
-        if (local != null) {
-            return local;
-        }
-        globalIterator = localIterator;
-        local = complexLiteral();
-        if (local != null) {
-            return local;
-        }
-        globalIterator = localIterator;
-        local = stringLiteral();
-        if (local != null) {
-            return local;
-        }
-        globalIterator = localIterator;
-        local = identifier();
-        if (local != null) {
-            return local;
-        }
-        globalIterator = localIterator;
         return null;
     }
 
@@ -425,9 +432,9 @@ public class Parser {
         int localIterator = globalIterator;
         Tree local = new Tree();
         globalIterator++;
-        if (tokens.get(globalIterator).equals("func")) {
+        if (tokens.get(globalIterator).getLexeme().equals("func")) {
             globalIterator++;
-            if (tokens.get(globalIterator).equals("(")) {
+            if (tokens.get(globalIterator).getLexeme().equals("(")) {
                 local.setLeft(new Tree());
                 local.getLeft().setLeft(new Tree());
                 local.getLeft().getLeft().setValue(tokens.get(globalIterator-1));
@@ -438,10 +445,10 @@ public class Parser {
                     globalIterator = localIterator;
                 }
                 globalIterator++;
-                if (tokens.get(globalIterator).equals(")")) {
+                if (tokens.get(globalIterator).getLexeme().equals(")")) {
                     local.setValue(tokens.get(globalIterator));
                     globalIterator++;
-                    if (tokens.get(globalIterator).equals(":")) {
+                    if (tokens.get(globalIterator).getLexeme().equals(":")) {
                         Tree right = new Tree();
                         right.setValue(tokens.get(globalIterator));
                         right.setRight(new Tree());
@@ -486,7 +493,7 @@ public class Parser {
             Tree right = new Tree();
             local.setRight(right);
             globalIterator++;
-            while (tokens.get(globalIterator).equals(",")) {
+            while (tokens.get(globalIterator).getLexeme().equals(",")) {
                 right.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right.setRight(declaration());
@@ -510,7 +517,7 @@ public class Parser {
         int localIterator = globalIterator;
         Tree local = new Tree();
         globalIterator++;
-        if (tokens.get(globalIterator).equals("do")) {
+        if (tokens.get(globalIterator).getLexeme().equals("do")) {
             local.setValue(tokens.get(globalIterator));
             local.setRight(new Tree());
             localIterator = globalIterator;
@@ -520,13 +527,13 @@ public class Parser {
                 return null;
             }
             globalIterator++;
-            if (tokens.get(globalIterator).equals("end")) {
+            if (tokens.get(globalIterator).getLexeme().equals("end")) {
                 local.getRight().setValue(tokens.get(globalIterator));
                 return local;
             }
             globalIterator--;
         }
-        if (tokens.get(globalIterator).equals("=>")) {
+        if (tokens.get(globalIterator).getLexeme().equals("=>")) {
             local.setValue(tokens.get(globalIterator));
             localIterator = globalIterator;
             local.setRight(expression());
@@ -544,7 +551,7 @@ public class Parser {
         int localIterator = globalIterator;
         Tree local = new Tree();
         globalIterator++;
-        if (tokens.get(globalIterator).equals("[")) {
+        if (tokens.get(globalIterator).getLexeme().equals("[")) {
             local.setValue(tokens.get(globalIterator));
             Tree temp = new Tree();
             localIterator = globalIterator;
@@ -555,7 +562,7 @@ public class Parser {
             Tree rightTemp = new Tree();
             temp.setRight(rightTemp);
             globalIterator++;
-            while (tokens.get(globalIterator).equals(",")) {
+            while (tokens.get(globalIterator).getLexeme().equals(",")) {
                 rightTemp.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 rightTemp.setRight(tupleElement());
@@ -576,11 +583,13 @@ public class Parser {
 
     private Tree tupleElement() {
         int localIterator = globalIterator;
-        Tree local = identifier();
-        if (local != null) {
+        Tree local = new Tree();
+        globalIterator++;
+        if (tokens.get(globalIterator).getType() == Token.TokenType.IDENTIFIER) {
+            local.setValue(tokens.get(globalIterator));
             globalIterator++;
-            if (tokens.get(globalIterator).equals("is")) {
-                String value = tokens.get(globalIterator);
+            if (tokens.get(globalIterator).getLexeme().equals("is")) {
+                Token value = tokens.get(globalIterator);
                 localIterator = globalIterator;
                 Tree temp = expression();
                 if (temp != null) {
@@ -591,7 +600,7 @@ public class Parser {
             }
             globalIterator--;
         }
-        localIterator = globalIterator;
+        globalIterator--;
         local = expression();
         if (local != null) {
             return local;
@@ -604,7 +613,7 @@ public class Parser {
         int localIterator = globalIterator;
         Tree local = new Tree();
         globalIterator++;
-        if (tokens.get(globalIterator).equals("[")) {
+        if (tokens.get(globalIterator).getLexeme().equals("[")) {
             local.setValue(tokens.get(globalIterator));
             Tree temp = new Tree();
             localIterator = globalIterator;
@@ -615,7 +624,7 @@ public class Parser {
             Tree rightTemp = new Tree();
             temp.setRight(rightTemp);
             globalIterator++;
-            while (tokens.get(globalIterator).equals(",")) {
+            while (tokens.get(globalIterator).getLexeme().equals(",")) {
                 rightTemp.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 rightTemp.setRight(mapElement());
@@ -642,8 +651,8 @@ public class Parser {
             return null;
         }
         globalIterator++;
-        if (tokens.get(globalIterator).equals(":")) {
-            String value = tokens.get(globalIterator);
+        if (tokens.get(globalIterator).getLexeme().equals(":")) {
+            Token value = tokens.get(globalIterator);
             localIterator = globalIterator;
             Tree right = expression();
             if (right != null) {
@@ -658,8 +667,8 @@ public class Parser {
     private Tree list() {
         int localIterator = globalIterator;
         globalIterator++;
-        if (tokens.get(globalIterator).equals("(")) {
-            String value = tokens.get(globalIterator);
+        if (tokens.get(globalIterator).getLexeme().equals("(")) {
+            Token value = tokens.get(globalIterator);
             localIterator = globalIterator;
             Tree local = new Tree();
             Tree left = expression();
@@ -667,7 +676,7 @@ public class Parser {
                 globalIterator = localIterator;
             }
             globalIterator++;
-            if (tokens.get(globalIterator).equals(")")) {
+            if (tokens.get(globalIterator).getLexeme().equals(")")) {
                 local.setLeft(left);
                 local.setValue(tokens.get(globalIterator));
                 return new Tree(null, local, value);
@@ -682,19 +691,19 @@ public class Parser {
     private Tree type() {
         int localIterator = globalIterator;
         globalIterator++;
-        if (tokens.get(globalIterator).equals("bool") || tokens.get(globalIterator).equals("integer") ||
-                tokens.get(globalIterator).equals("real")) {
+        if (tokens.get(globalIterator).getType() == Token.TokenType.BOOLEAN || tokens.get(globalIterator).getLexeme().equals("integer") ||
+                tokens.get(globalIterator).getLexeme().equals("real")) {
             return new Tree(null, null, tokens.get(globalIterator));
         }
-        if (tokens.get(globalIterator).equals("rational") || tokens.get(globalIterator).equals("complex") ||
-                tokens.get(globalIterator).equals("string")) {
+        if (tokens.get(globalIterator).getLexeme().equals("rational") || tokens.get(globalIterator).getLexeme().equals("complex") ||
+                tokens.get(globalIterator).getLexeme().equals("string")) {
             return new Tree(null, null, tokens.get(globalIterator));
         }
-        if (tokens.get(globalIterator).equals("func")) {
+        if (tokens.get(globalIterator).getLexeme().equals("func")) {
             Tree local = new Tree();
-            local.setLeft(new Tree(null, null, "func"));
+            local.setLeft(new Tree(null, null, tokens.get(globalIterator)));
             globalIterator++;
-            if (tokens.get(globalIterator).equals("(")) {
+            if (tokens.get(globalIterator).getLexeme().equals("(")) {
                 local.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 Tree localRight = type();
@@ -703,7 +712,7 @@ public class Parser {
                     globalIterator = localIterator;
                 } else {
                     globalIterator++;
-                    while (tokens.get(globalIterator).equals(",")) {
+                    while (tokens.get(globalIterator).getLexeme().equals(",")) {
                         localRight = rightmost(local);
                         localIterator = globalIterator;
                         localRight.setRight(type());
@@ -716,11 +725,11 @@ public class Parser {
                     globalIterator--;
                 }
                 globalIterator++;
-                if (tokens.get(globalIterator).equals(")")) {
+                if (tokens.get(globalIterator).getLexeme().equals(")")) {
                     local = new Tree(local, null, tokens.get(globalIterator));
                     Tree rightLocal = new Tree();
                     globalIterator++;
-                    if (tokens.get(globalIterator).equals(":")) {
+                    if (tokens.get(globalIterator).getLexeme().equals(":")) {
                         rightLocal.setValue(tokens.get(globalIterator));
                         localIterator = globalIterator;
                         rightLocal.setRight(type());
@@ -739,16 +748,17 @@ public class Parser {
             globalIterator--;
             return null;
         }
-        if (tokens.get(globalIterator).equals("{")) {
+        if (tokens.get(globalIterator).getLexeme().equals("{")) {
+            Tree temp = new Tree(null, null, tokens.get(globalIterator));
             globalIterator++;
-            if (tokens.get(globalIterator).equals("}")) {
-                return new Tree(new Tree(null, null, "{"), null, "}");
+            if (tokens.get(globalIterator).getLexeme().equals("}")) {
+                return new Tree(temp, null, tokens.get(globalIterator));
             }
             globalIterator--;
             return null;
         }
-        if (tokens.get(globalIterator).equals("[")) {
-            String value = tokens.get(globalIterator);
+        if (tokens.get(globalIterator).getLexeme().equals("[")) {
+            Token value = tokens.get(globalIterator);
             localIterator = globalIterator;
             Tree right = type();
             if (right == null) {
@@ -758,7 +768,7 @@ public class Parser {
             Tree local = new Tree();
             local.setLeft(new Tree(null, right, value));
             globalIterator++;
-            if (tokens.get(globalIterator).equals(":")) {
+            if (tokens.get(globalIterator).getLexeme().equals(":")) {
                 local.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right = type();
@@ -767,7 +777,7 @@ public class Parser {
                     return null;
                 }
                 globalIterator++;
-                if (tokens.get(globalIterator).equals("]")) {
+                if (tokens.get(globalIterator).getLexeme().equals("]")) {
                     local.setRight(new Tree(right, null, tokens.get(globalIterator)));
                     return local;
                 }
@@ -777,8 +787,8 @@ public class Parser {
             globalIterator--;
             return null;
         }
-        if (tokens.get(globalIterator).equals("(")) {
-            String value = tokens.get(globalIterator);
+        if (tokens.get(globalIterator).getLexeme().equals("(")) {
+            Token value = tokens.get(globalIterator);
             localIterator = globalIterator;
             Tree right = type();
             if (right == null) {
@@ -786,7 +796,7 @@ public class Parser {
                 return null;
             }
             globalIterator++;
-            if (tokens.get(globalIterator).equals(")")) {
+            if (tokens.get(globalIterator).getLexeme().equals(")")) {
                 return new Tree(null, new Tree(right, null, tokens.get(globalIterator)), value);
             }
         }
@@ -802,7 +812,7 @@ public class Parser {
             Tree right = new Tree();
             local.setRight(right);
             globalIterator++;
-            while (tokens.get(globalIterator).equals(",")) {
+            while (tokens.get(globalIterator).getLexeme().equals(",")) {
                 right.setValue(tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right.setRight(statement());
@@ -834,10 +844,10 @@ public class Parser {
             return local;
         }
         globalIterator = localIterator;
-        local = loop();
+        /*local = loop();
         if (local != null) {
             return local;
-        }
+        }*/
         globalIterator = localIterator;
         local = declaration();
         if (local != null) {
@@ -845,8 +855,8 @@ public class Parser {
         }
         globalIterator = localIterator;
         globalIterator++;
-        if (tokens.get(globalIterator).equals("return")) {
-            String value = tokens.get(globalIterator);
+        if (tokens.get(globalIterator).getLexeme().equals("return")) {
+            Token value = tokens.get(globalIterator);
             localIterator = globalIterator;
             Tree right = expression();
             if (right == null) {
@@ -854,7 +864,7 @@ public class Parser {
             }
             return new Tree(null, right, value);
         }
-        if (tokens.get(globalIterator).equals("break")) {
+        if (tokens.get(globalIterator).getLexeme().equals("break")) {
             return new Tree(null, null, tokens.get(globalIterator));
         }
         globalIterator--;
@@ -866,8 +876,8 @@ public class Parser {
         Tree left = secondary();
         if (left != null) {
             globalIterator++;
-            if (tokens.get(globalIterator).equals(":=")) {
-                String value = tokens.get(globalIterator);
+            if (tokens.get(globalIterator).getLexeme().equals(":=")) {
+                Token value = tokens.get(globalIterator);
                 localIterator = globalIterator;
                 Tree right = expression();
                 if (right == null) {
@@ -886,8 +896,8 @@ public class Parser {
     private Tree conditional() {
         int localIterator = globalIterator;
         globalIterator++;
-        if (tokens.get(globalIterator).equals("if")) {
-            String value = tokens.get(globalIterator);
+        if (tokens.get(globalIterator).getLexeme().equals("if")) {
+            Token value = tokens.get(globalIterator);
             localIterator = globalIterator;
             Tree right = expression();
             if (right == null) {
@@ -896,7 +906,7 @@ public class Parser {
             }
             Tree leftLocal = new Tree(null, right, value);
             globalIterator++;
-            if (tokens.get(globalIterator).equals("then")) {
+            if (tokens.get(globalIterator).getLexeme().equals("then")) {
                 Tree local = new Tree(leftLocal, null, tokens.get(globalIterator));
                 localIterator = globalIterator;
                 right = statements();
@@ -906,7 +916,7 @@ public class Parser {
                 }
                 globalIterator++;
                 Tree rightLocal = new Tree(right, null, null);
-                if (tokens.get(globalIterator).equals("else")) {
+                if (tokens.get(globalIterator).getLexeme().equals("else")) {
                     right.setValue(tokens.get(globalIterator));
                     localIterator = globalIterator;
                     right.setRight(statements());
@@ -918,7 +928,7 @@ public class Parser {
                     globalIterator--;
                 }
                 globalIterator++;
-                if (tokens.get(globalIterator).equals("end")) {
+                if (tokens.get(globalIterator).getLexeme().equals("end")) {
                     rightLocal.setValue(tokens.get(globalIterator));
                     local.setRight(rightLocal);
                     return local;
