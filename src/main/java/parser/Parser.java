@@ -633,4 +633,307 @@ public class Parser {
         globalIterator--;
         return null;
     }
+
+    private Tree mapElement() {
+        int localIterator = globalIterator;
+        Tree left = expression();
+        if (left == null) {
+            globalIterator = localIterator;
+            return null;
+        }
+        globalIterator++;
+        if (tokens.get(globalIterator).equals(":")) {
+            String value = tokens.get(globalIterator);
+            localIterator = globalIterator;
+            Tree right = expression();
+            if (right != null) {
+                return new Tree(left, right, value);
+            }
+            globalIterator = localIterator;
+        }
+        globalIterator--;
+        return null;
+    }
+
+    private Tree list() {
+        int localIterator = globalIterator;
+        globalIterator++;
+        if (tokens.get(globalIterator).equals("(")) {
+            String value = tokens.get(globalIterator);
+            localIterator = globalIterator;
+            Tree local = new Tree();
+            Tree left = expression();
+            if (left == null) {
+                globalIterator = localIterator;
+            }
+            globalIterator++;
+            if (tokens.get(globalIterator).equals(")")) {
+                local.setLeft(left);
+                local.setValue(tokens.get(globalIterator));
+                return new Tree(null, local, value);
+            }
+            globalIterator--;
+            return null;
+        }
+        globalIterator--;
+        return null;
+    }
+
+    private Tree type() {
+        int localIterator = globalIterator;
+        globalIterator++;
+        if (tokens.get(globalIterator).equals("bool") || tokens.get(globalIterator).equals("integer") ||
+                tokens.get(globalIterator).equals("real")) {
+            return new Tree(null, null, tokens.get(globalIterator));
+        }
+        if (tokens.get(globalIterator).equals("rational") || tokens.get(globalIterator).equals("complex") ||
+                tokens.get(globalIterator).equals("string")) {
+            return new Tree(null, null, tokens.get(globalIterator));
+        }
+        if (tokens.get(globalIterator).equals("func")) {
+            Tree local = new Tree();
+            local.setLeft(new Tree(null, null, "func"));
+            globalIterator++;
+            if (tokens.get(globalIterator).equals("(")) {
+                local.setValue(tokens.get(globalIterator));
+                localIterator = globalIterator;
+                Tree localRight = type();
+                local.setRight(localRight);
+                if (localRight == null) {
+                    globalIterator = localIterator;
+                } else {
+                    globalIterator++;
+                    while (tokens.get(globalIterator).equals(",")) {
+                        localRight = rightmost(local);
+                        localIterator = globalIterator;
+                        localRight.setRight(type());
+                        if (localRight.getRight() == null) {
+                            globalIterator = localIterator;
+                            return null;
+                        }
+                        globalIterator++;
+                    }
+                    globalIterator--;
+                }
+                globalIterator++;
+                if (tokens.get(globalIterator).equals(")")) {
+                    local = new Tree(local, null, tokens.get(globalIterator));
+                    Tree rightLocal = new Tree();
+                    globalIterator++;
+                    if (tokens.get(globalIterator).equals(":")) {
+                        rightLocal.setValue(tokens.get(globalIterator));
+                        localIterator = globalIterator;
+                        rightLocal.setRight(type());
+                        if (rightLocal.getRight() == null) {
+                            globalIterator = localIterator;
+                            return null;
+                        }
+                        local.setRight(rightLocal);
+                    }
+                    globalIterator--;
+                    return local;
+                }
+                globalIterator--;
+                return null;
+            }
+            globalIterator--;
+            return null;
+        }
+        if (tokens.get(globalIterator).equals("{")) {
+            globalIterator++;
+            if (tokens.get(globalIterator).equals("}")) {
+                return new Tree(new Tree(null, null, "{"), null, "}");
+            }
+            globalIterator--;
+            return null;
+        }
+        if (tokens.get(globalIterator).equals("[")) {
+            String value = tokens.get(globalIterator);
+            localIterator = globalIterator;
+            Tree right = type();
+            if (right == null) {
+                globalIterator = localIterator;
+                return null;
+            }
+            Tree local = new Tree();
+            local.setLeft(new Tree(null, right, value));
+            globalIterator++;
+            if (tokens.get(globalIterator).equals(":")) {
+                local.setValue(tokens.get(globalIterator));
+                localIterator = globalIterator;
+                right = type();
+                if (right == null) {
+                    globalIterator = localIterator;
+                    return null;
+                }
+                globalIterator++;
+                if (tokens.get(globalIterator).equals("]")) {
+                    local.setRight(new Tree(right, null, tokens.get(globalIterator)));
+                    return local;
+                }
+                globalIterator--;
+                return null;
+            }
+            globalIterator--;
+            return null;
+        }
+        if (tokens.get(globalIterator).equals("(")) {
+            String value = tokens.get(globalIterator);
+            localIterator = globalIterator;
+            Tree right = type();
+            if (right == null) {
+                globalIterator = localIterator;
+                return null;
+            }
+            globalIterator++;
+            if (tokens.get(globalIterator).equals(")")) {
+                return new Tree(null, new Tree(right, null, tokens.get(globalIterator)), value);
+            }
+        }
+        globalIterator--;
+        return null;
+    }
+
+    private Tree statements() {
+        int localIterator = globalIterator;
+        Tree left = statement();
+        if (left != null) {
+            Tree local = new Tree();
+            Tree right = new Tree();
+            local.setRight(right);
+            globalIterator++;
+            while (tokens.get(globalIterator).equals(",")) {
+                right.setValue(tokens.get(globalIterator));
+                localIterator = globalIterator;
+                right.setRight(statement());
+                if (right.getRight() == null) {
+                    globalIterator = localIterator;
+                    return null;
+                }
+                right = rightmost(right);
+                right.setRight(new Tree());
+                right = right.getRight();
+                globalIterator++;
+            }
+            globalIterator--;
+            return new Tree(left, local, null);
+        }
+        globalIterator = localIterator;
+        return null;
+    }
+
+    private Tree statement() {
+        int localIterator = globalIterator;
+        Tree local = assignmentOrCall();
+        if (local != null) {
+            return local;
+        }
+        globalIterator = localIterator;
+        local = conditional();
+        if (local != null) {
+            return local;
+        }
+        globalIterator = localIterator;
+        local = loop();
+        if (local != null) {
+            return local;
+        }
+        globalIterator = localIterator;
+        local = declaration();
+        if (local != null) {
+            return local;
+        }
+        globalIterator = localIterator;
+        globalIterator++;
+        if (tokens.get(globalIterator).equals("return")) {
+            String value = tokens.get(globalIterator);
+            localIterator = globalIterator;
+            Tree right = expression();
+            if (right == null) {
+                globalIterator = localIterator;
+            }
+            return new Tree(null, right, value);
+        }
+        if (tokens.get(globalIterator).equals("break")) {
+            return new Tree(null, null, tokens.get(globalIterator));
+        }
+        globalIterator--;
+        return null;
+    }
+
+    private Tree assignmentOrCall() {
+        int localIterator = globalIterator;
+        Tree left = secondary();
+        if (left != null) {
+            globalIterator++;
+            if (tokens.get(globalIterator).equals(":=")) {
+                String value = tokens.get(globalIterator);
+                localIterator = globalIterator;
+                Tree right = expression();
+                if (right == null) {
+                    globalIterator = localIterator;
+                    return null;
+                }
+                return new Tree(left, right, value);
+            }
+            globalIterator--;
+            return left;
+        }
+        globalIterator = localIterator;
+        return null;
+    }
+
+    private Tree conditional() {
+        int localIterator = globalIterator;
+        globalIterator++;
+        if (tokens.get(globalIterator).equals("if")) {
+            String value = tokens.get(globalIterator);
+            localIterator = globalIterator;
+            Tree right = expression();
+            if (right == null) {
+                globalIterator = localIterator;
+                return null;
+            }
+            Tree leftLocal = new Tree(null, right, value);
+            globalIterator++;
+            if (tokens.get(globalIterator).equals("then")) {
+                Tree local = new Tree(leftLocal, null, tokens.get(globalIterator));
+                localIterator = globalIterator;
+                right = statements();
+                if (right == null) {
+                    globalIterator = localIterator;
+                    return null;
+                }
+                globalIterator++;
+                Tree rightLocal = new Tree(right, null, null);
+                if (tokens.get(globalIterator).equals("else")) {
+                    right.setValue(tokens.get(globalIterator));
+                    localIterator = globalIterator;
+                    right.setRight(statements());
+                    if (right.getRight() == null) {
+                        globalIterator = localIterator;
+                        return null;
+                    }
+                } else {
+                    globalIterator--;
+                }
+                globalIterator++;
+                if (tokens.get(globalIterator).equals("end")) {
+                    rightLocal.setValue(tokens.get(globalIterator));
+                    local.setRight(rightLocal);
+                    return local;
+                }
+                globalIterator--;
+                return null;
+            }
+            globalIterator--;
+            return null;
+        }
+        globalIterator--;
+        return null;
+    }
+
+//    private Tree loop() {
+//
+//    }
 }
