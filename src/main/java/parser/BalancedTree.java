@@ -91,10 +91,20 @@ public class BalancedTree {
                 if (node.getValue() != null && (node.getRight() != null && node.getRight().getValue() == null)) {
                     insert(node.getRight(), token);
                 } else {
-                    insert(node.parent, token);
+                    if (node.parent != null) {
+                        insert(node.parent, token);
+                    }
                 }
             }
         }
+    }
+
+    private void insertRight(Token token) {
+        Node temp = root.getRight();
+        while (temp.getLeft() != null) {
+            temp = temp.getLeft();
+        }
+        insert(temp, token);
     }
 
     public Node getRoot() {
