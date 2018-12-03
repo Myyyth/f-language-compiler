@@ -16,10 +16,7 @@ public class Main {
                     .useDelimiter("\\A").next();
             ArrayList<Token> tokens = new Lexer(entireFileText).parse();
             System.out.println(tokens);
-            Tree ast = new Parser(tokens).parse();
-            BalancedTree bt = new BalancedTree(4);
-            bt.getRoot().getLeft();
-            System.out.println("sss");
+            BalancedTree ast = new Parser(tokens).parse();
         } catch (Exception e) {
             e.printStackTrace();
         }
