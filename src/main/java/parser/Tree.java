@@ -1,11 +1,13 @@
 package parser;
 
+import lexer.Token;
+
 public class Tree {
     private Tree left;
     private Tree right;
-    private String value;
+    private Token value;
 
-    public Tree(parser.Tree left, parser.Tree right, String value) {
+    public Tree(parser.Tree left, parser.Tree right, Token value) {
         this.left = left;
         this.right = right;
         this.value = value;
@@ -31,11 +33,11 @@ public class Tree {
         this.right = right;
     }
 
-    public String getValue() {
+    public Token getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Token value) {
         this.value = value;
     }
 }

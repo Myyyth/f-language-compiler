@@ -1,0 +1,1 @@
+d: integer is 123;
