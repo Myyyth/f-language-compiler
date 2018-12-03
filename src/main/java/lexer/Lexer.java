@@ -387,6 +387,10 @@ public class Lexer {
             token = new Token(Token.TokenType.WHITE_SPACE, "\t", row, column, 1);
             column++;
         }
+        else if (isNext(position) && nextChar(position) == '\r') {
+            token = new Token(Token.TokenType.WHITE_SPACE, "\r", row, column, 1);
+            column++;
+        }
         else if (isNext(position) && nextChar(position) == '\n') {
             token = new Token(Token.TokenType.WHITE_SPACE, "\n", row, column, 1);
             row++;
