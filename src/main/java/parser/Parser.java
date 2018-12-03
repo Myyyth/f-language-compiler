@@ -14,6 +14,14 @@ public class Parser {
 
     public Tree parse() {
         deleteWhitespaces();
+        Tree tree = program();
+        if (tree != null) {
+            BalancedTree balanced = new BalancedTree((int)Math.ceil(Math.log(tokens.size()) / Math.log(2)));
+            for (Token token: tokens) {
+                balanced.insert(token);
+            }
+            System.out.println();
+        }
         return program();
     }
 

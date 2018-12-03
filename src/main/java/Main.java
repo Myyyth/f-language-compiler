@@ -1,5 +1,6 @@
 import lexer.Lexer;
 import lexer.Token;
+import parser.BalancedTree;
 import parser.Parser;
 import parser.Tree;
 
@@ -16,6 +17,8 @@ public class Main {
             ArrayList<Token> tokens = new Lexer(entireFileText).parse();
             System.out.println(tokens);
             Tree ast = new Parser(tokens).parse();
+            BalancedTree bt = new BalancedTree(4);
+            bt.getRoot().getLeft();
             System.out.println("sss");
         } catch (Exception e) {
             e.printStackTrace();
