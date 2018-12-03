@@ -3,7 +3,7 @@ package lexer;
 import java.util.ArrayList;
 
 public class Lexer {
-    private ArrayList<Token> tokens = new ArrayList<>();
+    private ArrayList<Token> tokens = new ArrayList<Token>();
     private StringBuilder source;
     private int row = 0;
     private int column = 0;
@@ -385,6 +385,10 @@ public class Lexer {
         Token token = null;
         if (isNext(position) && nextChar(position) == '\t') {
             token = new Token(Token.TokenType.WHITE_SPACE, "\t", row, column, 1);
+            column++;
+        }
+        else if (isNext(position) && nextChar(position) == '\r') {
+            token = new Token(Token.TokenType.WHITE_SPACE, "\r", row, column, 1);
             column++;
         }
         else if (isNext(position) && nextChar(position) == '\n') {
