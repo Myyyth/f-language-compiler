@@ -1,7 +1,6 @@
 package bytecode_generator;
 
 import org.objectweb.asm.*;
-import org.objectweb.asm.tree.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
