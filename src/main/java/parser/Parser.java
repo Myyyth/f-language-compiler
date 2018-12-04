@@ -18,6 +18,9 @@ public class Parser {
         BalancedTree balanced = new BalancedTree((int)Math.ceil(Math.log(tokens.size()) / Math.log(2)));
         if (tree != null) {
             for (Token token: tokens) {
+                if (token.getLexeme().equals("+")) {
+                    System.out.println("");
+                }
                 balanced.insert(token);
             }
         }
