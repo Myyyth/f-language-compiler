@@ -27,7 +27,6 @@ public class Main {
             CommonTokenStream tokens = new CommonTokenStream(flexer);
             fParser fparser = new fParser(tokens);
             fParser.ProgramContext programContext = fparser.program();
-            System.out.println("");
         } catch (Exception e) {
             e.printStackTrace();
         }
