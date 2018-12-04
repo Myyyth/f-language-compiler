@@ -15,6 +15,12 @@
             <artifactId>antlr4-runtime</artifactId>
             <version>4.7.1</version>
         </dependency>
+        <!-- ASM for bytecode generation https://asm.ow2.io/ -->
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-all</artifactId>
+            <version>5.2</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
