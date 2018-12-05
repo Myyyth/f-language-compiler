@@ -51,9 +51,10 @@ public class Structure implements Runnable {
         return new Complex(a, 0);
     }
 
-    public double re(Complex a){
+    public double re(Complex a) {
         return a.real;
-=======
+    }
+
     public int addIntInt(int a, int b) {
         return a + b;
     }
