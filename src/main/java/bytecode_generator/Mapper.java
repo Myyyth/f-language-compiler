@@ -23,6 +23,6 @@ public class Mapper {
     }
 
     public String createComplexObject(double real, double imaginary) {
-
+        return null;
     }
 }

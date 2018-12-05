@@ -4,6 +4,7 @@ public class Structure implements Runnable {
     public void run() {
         Complex complex = new Complex(2424, 857);
         System.out.println(complex.imaginary);
+        Object a = new Integer(1);
     }
     public class Complex {
         public double real;
