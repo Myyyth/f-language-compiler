@@ -45,13 +45,20 @@ public class ConvertToJava {
             if (tokens.get(position).getLexeme().equals(":")) {
                 position++;
                 if (tokens.get(position).getLexeme().equals("integer")) {
-                    code += identifier + " = new Integer(0);\n";
+                    code += identifier + " = new Integer(" + convertExpression() +
+                            ");\n";
                     position++;
 
                     code += "System.out.println(" + identifier + ".toString());\n";
                 }
             }
         }
+        return code;
+    }
+
+    private String convertExpression() {
+        String code = "";
+        
         return code;
     }
 
