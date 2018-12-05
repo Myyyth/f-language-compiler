@@ -3,6 +3,7 @@ import lexer.Token;
 import parser.BalancedTree;
 import parser.Parser;
 import parser.Tree;
+import semantic.Semantic;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,9 +17,12 @@ public class Main {
                     .useDelimiter("\\A").next();
             ArrayList<Token> tokens = new Lexer(entireFileText).parse();
             System.out.println(tokens);
+            Semantic s = new Semantic(tokens);
+            s.analyze();
             Tree ast = new Parser(tokens).parse();
             BalancedTree bt = new BalancedTree(4);
             bt.getRoot().getLeft();
+
             System.out.println("sss");
         } catch (Exception e) {
             e.printStackTrace();

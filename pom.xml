@@ -7,6 +7,13 @@
     <groupId>org</groupId>
     <artifactId>f-language-compiler</artifactId>
     <version>0.1 ALPHA</version>
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.5</version>
+        </dependency>
+    </dependencies>
 
 
 </project>
