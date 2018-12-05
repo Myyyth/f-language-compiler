@@ -21,9 +21,128 @@ public class ConvertToJava {
         String source = "public class " + fileName + " implements Runnable {\n" +
                 "  public void run() {\n" +
                 convertTokens() +
-                "    }\n"
-
-                + "}\n" ; // TODO add structure code
+                "    }\n" +
+                Mapper.addBooleanArrayArray() +
+                Mapper.addBooleanArrayEntity() +
+                Mapper.addIntArrayArray() +
+                Mapper.addIntArrayEntity() +
+                Mapper.addIntInt() +
+                Mapper.addIntRational() +
+                Mapper.addIntReal() +
+                Mapper.addRationalArrayArray() +
+                Mapper.addRationalArrayEntity() +
+                Mapper.addRationalInt() +
+                Mapper.addRationalRational() +
+                Mapper.addRealArrayArray() +
+                Mapper.addRealArrayEntity() +
+                Mapper.addRealInt() +
+                Mapper.addRealReal() +
+                Mapper.addStringArrayArray() +
+                Mapper.addStringArrayEntity() +
+                Mapper.complInt() +
+                Mapper.complIntInt() +
+                Mapper.complReal() +
+                Mapper.complIntReal() +
+                Mapper.complRealInt() +
+                Mapper.complRealReal() +
+                Mapper.denomRat() +
+                Mapper.divComplexFunc() +
+                Mapper.divComplexWithLeftIntFunc() +
+                Mapper.divComplexWithRealLeftFunc() +
+                Mapper.divComplexWithRealRightFunc() +
+                Mapper.divIntInt() +
+                Mapper.divIntRational() +
+                Mapper.divIntReal() +
+                Mapper.divRationalInt() +
+                Mapper.divRationalRational() +
+                Mapper.divRealInt() +
+                Mapper.divRealReal() +
+                Mapper.eqComplexFunc() +
+                Mapper.equalIntInt() +
+                Mapper.equalIntRational() +
+                Mapper.equalIntReal() +
+                Mapper.equalRationalInt() +
+                Mapper.equalRationalRational() +
+                Mapper.equalRealInt() +
+                Mapper.equalRealReal() +
+                Mapper.exclusiveOrBoolBool() +
+                Mapper.grComplexFunc() +
+                Mapper.grEqComplexFunc() +
+                Mapper.im() +
+                Mapper.lessComplexFunc() +
+                Mapper.lessEqComplexFunc() +
+                Mapper.lessEqualIntInt() +
+                Mapper.lessEqualIntRational() +
+                Mapper.lessEqualIntReal() +
+                Mapper.lessEqualRationalInt() +
+                Mapper.lessEqualRationalRational() +
+                Mapper.lessEqualRealInt() +
+                Mapper.lessEqualRealReal() +
+                Mapper.lessIntInt() +
+                Mapper.lessIntRational() +
+                Mapper.lessIntReal() +
+                Mapper.lessRationalInt() +
+                Mapper.lessRationalRational() +
+                Mapper.lessRealInt() +
+                Mapper.lessRealReal() +
+                Mapper.logicalAndBoolBool() +
+                Mapper.logicalOrBoolBool() +
+                Mapper.moreEqualIntInt() +
+                Mapper.moreEqualIntRational() +
+                Mapper.moreEqualIntReal() +
+                Mapper.moreEqualRationalInt() +
+                Mapper.moreEqualRationalRational() +
+                Mapper.moreEqualRealInt() +
+                Mapper.moreEqualRealReal() +
+                Mapper.moreIntInt() +
+                Mapper.moreIntRational() +
+                Mapper.moreIntReal() +
+                Mapper.moreRationalInt() +
+                Mapper.moreRationalRational() +
+                Mapper.moreRealInt() +
+                Mapper.moreRealReal() +
+                Mapper.mulComplexFunc() +
+                Mapper.mulComplexWithIntFunc() +
+                Mapper.mulComplexWithRealFunc() +
+                Mapper.multIntInt() +
+                Mapper.multIntRational() +
+                Mapper.multIntReal() +
+                Mapper.multRationalInt() +
+                Mapper.multRationalRational() +
+                Mapper.multRealInt() +
+                Mapper.multRealReal() +
+                Mapper.neqComplexFunc() +
+                Mapper.normRat() +
+                Mapper.notEqualIntInt() +
+                Mapper.notEqualIntRational() +
+                Mapper.notEqualIntReal() +
+                Mapper.notEqualRationalInt() +
+                Mapper.notEqualRationalRational() +
+                Mapper.notEqualRealInt() +
+                Mapper.notEqualRealReal() +
+                Mapper.numRat() +
+                Mapper.ratInt() +
+                Mapper.ratIntInt() +
+                Mapper.re() +
+                Mapper.roundRat() +
+                Mapper.roundReal() +
+                Mapper.subComplexFunc() +
+                Mapper.subComplexWithIntLeftFunc() +
+                Mapper.subComplexWithIntRightFunc() +
+                Mapper.subComplexWithRealLeftFunc() +
+                Mapper.subComplexWithRealRightFunc() +
+                Mapper.subtractIntInt() +
+                Mapper.subtractIntRational() +
+                Mapper.subtractIntReal() +
+                Mapper.subtractRationalInt() +
+                Mapper.subtractRationalRational() +
+                Mapper.subtractRealInt() +
+                Mapper.subtractRealReal() +
+                Mapper.sumComplexFunc() +
+                Mapper.sumComplexWithIntFunc() +
+                Mapper.sumComplexWithRealFunc()
+                + "} \n" + Mapper.createComplexClass() +
+                Mapper.createRationalClass(); // TODO add structure code
         return source;
     }
 

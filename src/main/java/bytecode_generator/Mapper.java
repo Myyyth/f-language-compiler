@@ -4,7 +4,7 @@ import org.objectweb.asm.*;
 import static org.objectweb.asm.Opcodes.*;
 
 public class Mapper {
-    public String createComplexClass() {
+    public static String createComplexClass() {
         return "public class Complex {\n" +
                 "        public double real;\n" +
                 "        public double imaginary;\n" +
@@ -22,55 +22,55 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String createComplexObject(String var, double real, double imaginary) {
+    public static String createComplexObject(String var, double real, double imaginary) {
         return "Complex "+var+" = new Complex("+real+", "+imaginary+");\n";
     }
 
-    public String printObject(String var) {
+    public static String printObject(String var) {
         return "System.out.println("+var+".toString());\n";
     }
 
-    public String sumComplexFunc() {
+    public static String sumComplexFunc() {
         return "public Complex sum(Complex a, Complex b) {\n" +
                 "        return new Complex(a.real + b.real, a.imaginary + b.imaginary);\n" +
                 "    }\n";
     }
 
-    public String sumComplexWithIntFunc() {
+    public static String sumComplexWithIntFunc() {
         return "public Complex sum(Complex a, int b) {\n" +
                 "        return new Complex(a.real + b, a);\n" +
                 "    }\n";
     }
 
-    public String sumComplexWithRealFunc() {
+    public static String sumComplexWithRealFunc() {
         return "public Complex sum(Complex a, real b) {\n" +
                 "        return new Complex(a.real + b, a);\n" +
                 "    }\n";
     }
 
-    public String subComplexFunc() {
+    public static String subComplexFunc() {
         return "public Complex sub(Complex a, Complex b) {\n" +
                 "        return new Complex(a.real + b.real, a.imaginary + b.imaginary);\n" +
                 "    }\n";
     }
 
-    public String subComplexWithIntRightFunc() {
+    public static String subComplexWithIntRightFunc() {
         return "public Complex sub(Complex a, int b) {\n" +
                 "        return new Complex(a.real - b, a);\n" +
                 "    }\n";
     }
 
-    public String subComplexWithIntLeftFunc() {
+    public static String subComplexWithIntLeftFunc() {
         return "public Complex sub(int a, Complex b) {\n" +
                 "        return new Complex(a - b.real, b.imaginary);\n" +
                 "    }\n";
     }
 
-    public String createComplexObject(double real, double imaginary) {
+    public static String createComplexObject(double real, double imaginary) {
         return null;
     }
 
-    public String createRationalClass(){
+    public static String createRationalClass(){
         return "public class Rational {\n" +
                 "        public int num;\n" +
                 "        public int denom;\n" +
@@ -85,38 +85,38 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String createRationalObject(String var, int num, int denom) {
+    public static String createRationalObject(String var, int num, int denom) {
         return "Rational " + var + " = new Rational("+num+", "+denom+");\n";
     }
 
     /*
         ADD part
      */
-    public String addIntInt(){
+    public static String addIntInt(){
         return "public int addIntInt(int a, int b) {\n" +
                 "        return a + b;\n" +
                 "    }\n";
     }
 
-    public String addIntReal(){
+    public static String addIntReal(){
         return "public int addIntInt(int a, int b) {\n" +
                 "        return a + b;\n" +
                 "    }\n";
     }
 
-    public String addRealInt(){
+    public static String addRealInt(){
         return "public double addRealInt(double a, int b) {\n" +
                 "        return a + b;\n" +
                 "    }\n";
     }
 
-    public String addRealReal(){
+    public static String addRealReal(){
         return "public double addRealReal(double a, double b) {\n" +
                 "        return a + b;\n" +
                 "    }\n";
     }
 
-    public String addIntRational(){
+    public static String addIntRational(){
         return "public Rational addIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -124,7 +124,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addRationalInt(){
+    public static String addRationalInt(){
         return "public Rational addRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -132,7 +132,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addRationalRational(){
+    public static String addRationalRational(){
         return "public Rational addRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -142,31 +142,31 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String subtractIntInt(){
+    public static String subtractIntInt(){
         return "public int subtractIntInt(int a, int b) {\n" +
                 "        return a - b;\n" +
                 "    }\n";
     }
 
-    public String subtractIntReal(){
+    public static String subtractIntReal(){
         return "public double subtractIntReal(int a, double b) {\n" +
                 "        return a - b;\n" +
                 "    }\n";
     }
 
-    public String subtractRealInt(){
+    public static String subtractRealInt(){
         return "public double subtractRealInt(double a, int b) {\n" +
                 "        return a - b;\n" +
                 "    }\n";
     }
 
-    public String subtractRealReal(){
+    public static String subtractRealReal(){
         return "public double subtractRealReal(double a, double b) {\n" +
                 "        return a - b;\n" +
                 "    }\n";
     }
 
-    public String subtractIntRational() {
+    public static String subtractIntRational() {
         return "public Rational subtractIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -174,7 +174,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String subtractRationalInt() {
+    public static String subtractRationalInt() {
         return "public Rational subtractRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -182,7 +182,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String subtractRationalRational() {
+    public static String subtractRationalRational() {
         return "public Rational subtractRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -195,31 +195,31 @@ public class Mapper {
     /*
         MULT part
      */
-    public String multIntInt() {
+    public static String multIntInt() {
         return "public int multIntInt(int a, int b) {\n" +
                 "        return a * b;\n" +
                 "    }\n";
     }
 
-    public String multIntReal() {
+    public static String multIntReal() {
         return "public double multIntReal(int a, double b) {\n" +
                 "        return a * b;\n" +
                 "    }\n";
     }
 
-    public String multRealInt() {
+    public static String multRealInt() {
         return "public double multRealInt(double a, int b) {\n" +
                 "        return a * b;\n" +
                 "    }\n";
     }
 
-    public String multRealReal() {
+    public static String multRealReal() {
         return "public double multRealReal(double a, double b) {\n" +
                 "        return a * b;\n" +
                 "    }\n";
     }
 
-    public String multIntRational() {
+    public static String multIntRational() {
         return "public Rational multIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -227,7 +227,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String multRationalInt() {
+    public static String multRationalInt() {
         return "public Rational multRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -235,7 +235,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String multRationalRational() {
+    public static String multRationalRational() {
         return "public Rational multRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -248,31 +248,31 @@ public class Mapper {
     /*
         DIV part
      */
-    public String divIntInt() {
+    public static String divIntInt() {
         return "public int divIntInt(int a, int b) {\n" +
                 "        return a / b;\n" +
                 "    }\n";
     }
 
-    public String divIntReal() {
+    public static String divIntReal() {
         return "public double divIntReal(int a, double b) {\n" +
                 "        return a / b;\n" +
                 "    }\n";
     }
 
-    public String divRealInt() {
+    public static String divRealInt() {
         return "public double divRealInt(double a, int b) {\n" +
                 "        return a / b;\n" +
                 "    }\n";
     }
 
-    public String divRealReal() {
+    public static String divRealReal() {
         return "public double divRealReal(double a, double b) {\n" +
                 "        return a / b;\n" +
                 "    }\n";
     }
 
-    public String divIntRational() {
+    public static String divIntRational() {
         return "public Rational divIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -280,7 +280,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String divRationalInt() {
+    public static String divRationalInt() {
         return "public Rational divRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -288,7 +288,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String divRationalRational() {
+    public static String divRationalRational() {
         return "public Rational divRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -301,31 +301,31 @@ public class Mapper {
     /*
         LESS part
      */
-    public String lessIntInt() {
+    public static String lessIntInt() {
         return "public boolean lessIntInt(int a, int b) {\n" +
                 "        return a < b;\n" +
                 "    }\n";
     }
 
-    public String lessIntReal() {
+    public static String lessIntReal() {
         return "public boolean lessIntReal(int a, double b) {\n" +
                 "        return a < b;\n" +
                 "    }\n";
     }
 
-    public String lessRealInt() {
+    public static String lessRealInt() {
         return "public boolean lessRealInt(double a, int b) {\n" +
                 "        return a < b;\n" +
                 "    }\n";
     }
 
-    public String lessRealReal() {
+    public static String lessRealReal() {
         return "public boolean lessRealReal(double a, double b) {\n" +
                 "        return a < b;\n" +
                 "    }\n";
     }
 
-    public String lessIntRational() {
+    public static String lessIntRational() {
         return "public boolean lessIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -333,7 +333,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String lessRationalInt() {
+    public static String lessRationalInt() {
         return "public boolean lessRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -341,7 +341,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String lessRationalRational() {
+    public static String lessRationalRational() {
         return "public boolean lessRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -354,31 +354,31 @@ public class Mapper {
     /*
        LESS_EQUAL part
     */
-    public String lessEqualIntInt() {
+    public static String lessEqualIntInt() {
         return "public boolean lessEqualIntInt(int a, int b) {\n" +
                 "        return a <= b;\n" +
                 "    }\n";
     }
 
-    public String lessEqualIntReal() {
+    public static String lessEqualIntReal() {
         return "public boolean lessEqualIntReal(int a, double b) {\n" +
                 "        return a <= b;\n" +
                 "    }\n";
     }
 
-    public String lessEqualRealInt() {
+    public static String lessEqualRealInt() {
         return "public boolean lessEqualRealInt(double a, int b) {\n" +
                 "        return a <= b;\n" +
                 "    }\n";
     }
 
-    public String lessEqualRealReal() {
+    public static String lessEqualRealReal() {
         return "public boolean lessEqualRealReal(double a, double b) {\n" +
                 "        return a <= b;\n" +
                 "    }\n";
     }
 
-    public String lessEqualIntRational() {
+    public static String lessEqualIntRational() {
         return "public boolean lessEqualIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -386,7 +386,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String lessEqualRationalInt() {
+    public static String lessEqualRationalInt() {
         return "public boolean lessEqualRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -394,7 +394,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String lessEqualRationalRational() {
+    public static String lessEqualRationalRational() {
         return "public boolean lessEqualRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -407,31 +407,31 @@ public class Mapper {
     /*
        MORE part
     */
-    public String moreIntInt() {
+    public static String moreIntInt() {
         return "public boolean moreIntInt(int a, int b) {\n" +
                 "        return a > b;\n" +
                 "    }\n";
     }
 
-    public String moreIntReal() {
+    public static String moreIntReal() {
         return "public boolean moreIntReal(int a, double b) {\n" +
                 "        return a > b;\n" +
                 "    }\n";
     }
 
-    public String moreRealInt() {
+    public static String moreRealInt() {
         return "public boolean moreRealInt(double a, int b) {\n" +
                 "        return a > b;\n" +
                 "    }\n";
     }
 
-    public String moreRealReal() {
+    public static String moreRealReal() {
         return "public boolean moreRealReal(double a, double b) {\n" +
                 "        return a > b;\n" +
                 "    }\n";
     }
 
-    public String moreIntRational() {
+    public static String moreIntRational() {
         return "public boolean moreIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -439,7 +439,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String moreRationalInt() {
+    public static String moreRationalInt() {
         return "public boolean moreRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -447,7 +447,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String moreRationalRational() {
+    public static String moreRationalRational() {
         return "public boolean moreRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -460,31 +460,31 @@ public class Mapper {
     /*
        MORE_EQUAL part
     */
-    public String moreEqualIntInt() {
+    public static String moreEqualIntInt() {
         return "public boolean moreEqualIntInt(int a, int b) {\n" +
                 "        return a >= b;\n" +
                 "    }\n";
     }
 
-    public String moreEqualIntReal() {
+    public static String moreEqualIntReal() {
         return "public boolean moreEqualIntReal(int a, double b) {\n" +
                 "        return a >= b;\n" +
                 "    }\n";
     }
 
-    public String moreEqualRealInt() {
+    public static String moreEqualRealInt() {
         return "public boolean moreEqualRealInt(double a, int b) {\n" +
                 "        return a >= b;\n" +
                 "    }\n";
     }
 
-    public String moreEqualRealReal() {
+    public static String moreEqualRealReal() {
         return "public boolean moreEqualRealReal(double a, double b) {\n" +
                 "        return a >= b;\n" +
                 "    }\n";
     }
 
-    public String moreEqualIntRational() {
+    public static String moreEqualIntRational() {
         return "public boolean moreEqualIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -492,7 +492,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String moreEqualRationalInt() {
+    public static String moreEqualRationalInt() {
         return "public boolean moreEqualRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -500,7 +500,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String moreEqualRationalRational() {
+    public static String moreEqualRationalRational() {
         return "public boolean moreEqualRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -513,31 +513,31 @@ public class Mapper {
     /*
        EQUAL part
     */
-    public String equalIntInt() {
+    public static String equalIntInt() {
         return "public boolean equalIntInt(int a, int b) {\n" +
                 "        return a == b;\n" +
                 "    }\n";
     }
 
-    public String equalIntReal() {
+    public static String equalIntReal() {
         return "public boolean equalIntReal(int a, double b) {\n" +
                 "        return a == b;\n" +
                 "    }\n";
     }
 
-    public String equalRealInt() {
+    public static String equalRealInt() {
         return "public boolean equalRealInt(double a, int b) {\n" +
                 "        return a == b;\n" +
                 "    }\n";
     }
 
-    public String equalRealReal() {
+    public static String equalRealReal() {
         return "public boolean equalRealReal(double a, double b) {\n" +
                 "        return a == b;\n" +
                 "    }\n";
     }
 
-    public String equalIntRational() {
+    public static String equalIntRational() {
         return "public boolean equalIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -545,7 +545,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String equalRationalInt() {
+    public static String equalRationalInt() {
         return "public boolean equalRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -553,7 +553,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String equalRationalRational() {
+    public static String equalRationalRational() {
         return "public boolean equalRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -566,31 +566,31 @@ public class Mapper {
     /*
        NOT_EQUAL part
     */
-    public String notEqualIntInt() {
+    public static String notEqualIntInt() {
         return "public boolean notEqualIntInt(int a, int b) {\n" +
                 "        return a != b;\n" +
                 "    }\n";
     }
 
-    public String notEqualIntReal() {
+    public static String notEqualIntReal() {
         return "public boolean notEqualIntReal(int a, double b) {\n" +
                 "        return a != b;\n" +
                 "    }\n";
     }
 
-    public String notEqualRealInt() {
+    public static String notEqualRealInt() {
         return "public boolean notEqualRealInt(double a, int b) {\n" +
                 "        return a != b;\n" +
                 "    }\n";
     }
 
-    public String notEqualRealReal() {
+    public static String notEqualRealReal() {
         return "public boolean notEqualRealReal(double a, double b) {\n" +
                 "        return a != b;\n" +
                 "    }\n";
     }
 
-    public String notEqualIntRational() {
+    public static String notEqualIntRational() {
         return "public boolean notEqualIntRational(int a, Rational b) {\n" +
                 "        int nom = b.num;\n" +
                 "        int denom = b.denom;\n" +
@@ -598,7 +598,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String notEqualRationalInt() {
+    public static String notEqualRationalInt() {
         return "public boolean notEqualRationalInt(Rational a, int b) {\n" +
                 "        int nom = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -606,7 +606,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String notEqualRationalRational() {
+    public static String notEqualRationalRational() {
         return "public boolean notEqualRationalRational(Rational a, Rational b) {\n" +
                 "        int nomA = a.num;\n" +
                 "        int denomA = a.denom;\n" +
@@ -619,61 +619,61 @@ public class Mapper {
     /*
         Logical operators part
      */
-    public String logicalAndBoolBool() {
+    public static String logicalAndBoolBool() {
         return "public boolean logicalAndBoolBool(boolean a, boolean b) {\n" +
                 "        return a && b;\n" +
                 "    }\n";
     }
 
-    public String logicalOrBoolBool() {
+    public static String logicalOrBoolBool() {
         return "public boolean logicalOrBoolBool(boolean a, boolean b) {\n" +
                 "        return a || b;\n" +
                 "    }\n";
     }
 
-    public String exclusiveOrBoolBool() {
+    public static String exclusiveOrBoolBool() {
         return "public boolean exclusiveOrBoolBool(boolean a, boolean b) {\n" +
                 "        return a ^ b;\n" +
                 "    }\n";
     }
 
-    public String roundReal() {
+    public static String roundReal() {
         return "public int roundReal(double a) {\n" +
                 "        return (int) Math.round(a);\n" +
                 "    }\n";
     }
 
-    public String roundRat() {
+    public static String roundRat() {
         return "public double roundRat(Rational a) {\n" +
                 "        return (a.num / a.denom);\n" +
                 "    }\n";
     }
 
-    public String numRat() {
+    public static String numRat() {
         return "public double numRat(Rational a) {\n" +
                 "        return a.num;\n" +
                 "    }\n";
     }
 
-    public String denomRat() {
+    public static String denomRat() {
         return "public double denomRat(Rational a) {\n" +
                 "        return a.denom;\n" +
                 "    }\n";
     }
 
-    public String ratInt() {
+    public static String ratInt() {
         return "public Rational ratInt(int a) {\n" +
                 "        return new Rational(a, 1);\n" +
                 "    }\n";
     }
 
-    public String ratIntInt() {
+    public static String ratIntInt() {
         return "public Rational ratIntInt(int a, int b) {\n" +
                 "        return new Rational(a, b);\n" +
                 "    }\n";
     }
 
-    public String normRat() {
+    public static String normRat() {
         return "public Rational normRat(Rational a) {\n" +
                 "        int num = a.num;\n" +
                 "        int denom = a.denom;\n" +
@@ -685,7 +685,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addIntArrayEntity() {
+    public static String addIntArrayEntity() {
         return "public int[] addIntArrayEntity(int[] a, int e) {\n" +
                 "        int len = a.length;\n" +
                 "        int[] newArr = new int[len + 1];\n" +
@@ -697,7 +697,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addRealArrayEntity() {
+    public static String addRealArrayEntity() {
         return "public double[] addRealArrayEntity(double[] a, double e) {\n" +
                 "        int len = a.length;\n" +
                 "        double[] newArr = new double[len + 1];\n" +
@@ -709,7 +709,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addRationalArrayEntity() {
+    public static String addRationalArrayEntity() {
         return "public Rational[] addRationalArrayEntity(Rational[] a, Rational e) {\n" +
                 "        int len = a.length;\n" +
                 "        Rational[] newArr = new Rational[len + 1];\n" +
@@ -721,7 +721,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addStringArrayEntity() {
+    public static String addStringArrayEntity() {
         return "public String[] addStringArrayEntity(String[] a, String e) {\n" +
                 "        int len = a.length;\n" +
                 "        String[] newArr = new String[len + 1];\n" +
@@ -733,7 +733,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addBooleanArrayEntity() {
+    public static String addBooleanArrayEntity() {
         return "public boolean[] addBooleanArrayEntity(boolean[] a, boolean e) {\n" +
                 "        int len = a.length;\n" +
                 "        boolean[] newArr = new boolean[len + 1];\n" +
@@ -745,7 +745,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addIntArrayArray() {
+    public static String addIntArrayArray() {
         return "public int[] addIntArrayArray(int[] a, int[] b) {\n" +
                 "        int lenA = a.length;\n" +
                 "        int lenB = b.length;\n" +
@@ -763,7 +763,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addRealArrayArray() {
+    public static String addRealArrayArray() {
         return "public double[] addRealArrayArray(double[] a, double[] b) {\n" +
                 "        int lenA = a.length;\n" +
                 "        int lenB = b.length;\n" +
@@ -781,7 +781,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addRationalArrayArray() {
+    public static String addRationalArrayArray() {
         return "public Rational[] addRationalArrayArray(Rational[] a, Rational[] b) {\n" +
                 "        int lenA = a.length;\n" +
                 "        int lenB = b.length;\n" +
@@ -799,7 +799,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addStringArrayArray() {
+    public static String addStringArrayArray() {
         return "public String[] addStringArrayArray(String[] a, String[] b) {\n" +
                 "        int lenA = a.length;\n" +
                 "        int lenB = b.length;\n" +
@@ -817,7 +817,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String addBooleanArrayArray() {
+    public static String addBooleanArrayArray() {
         return "public boolean[] addBooleanArrayArray(boolean[] a, boolean[] b) {\n" +
                 "        int lenA = a.length;\n" +
                 "        int lenB = b.length;\n" +
@@ -834,61 +834,61 @@ public class Mapper {
                 "        return newArr;\n";
     }
 
-    public String subComplexWithRealRightFunc() {
+    public static String subComplexWithRealRightFunc() {
         return "public Complex sub(Complex a, real b) {\n" +
                 "        return new Complex(a.real - b, a);\n" +
                 "    }\n";
     }
 
-    public String subComplexWithRealLeftFunc() {
+    public static String subComplexWithRealLeftFunc() {
         return "public Complex sub(real a, Complex b) {\n" +
                 "        return new Complex(a - b.real, b.imaginary);\n" +
                 "    }\n";
     }
 
-    public String mulComplexFunc() {
+    public static String mulComplexFunc() {
         return "public Complex mul(Complex a, Complex b) {\n" +
                 "        return new Complex(a.real * b.real, a.imaginary * b.imaginary);\n" +
                 "    }\n";
     }
 
-    public String mulComplexWithIntFunc() {
+    public static String mulComplexWithIntFunc() {
         return "public Complex mul(Complex a, int b) {\n" +
                 "        return new Complex(a.real * b, a);\n" +
                 "    }\n";
     }
 
-    public String mulComplexWithRealFunc() {
+    public static String mulComplexWithRealFunc() {
         return "public Complex mul(Complex a, real b) {\n" +
                 "        return new Complex(a.real * b, a);\n" +
                 "    }\n";
     }
 
-    public String divComplexFunc() {
+    public static String divComplexFunc() {
         return "public Complex div(Complex a, Complex b) {\n" +
                 "        return new Complex(a.real / b, a);\n" +
                 "    }\n";
     }
 
-    public String divComplexWithRealRightFunc() {
+    public static String divComplexWithRealRightFunc() {
         return "public Complex div(Complex a, real b) {\n" +
                 "        return new Complex(a.real / b, a);\n" +
                 "    }\n";
     }
 
-    public String divComplexWithRealLeftFunc() {
+    public static String divComplexWithRealLeftFunc() {
         return "public Complex div(real a, Complex b) {\n" +
                 "        return new Complex(a / b.real, b.imaginary);\n" +
                 "    }\n";
     }
 
-    public String divComplexWithLeftIntFunc() {
+    public static String divComplexWithLeftIntFunc() {
         return "public Complex div(int a, Complex b) {\n" +
                 "        return new Complex(a / b.real, b.imaginary);\n" +
                 "    }\n";
     }
 
-    public String eqComplexFunc() {
+    public static String eqComplexFunc() {
         return "public boolean eq(Complex a, Complex b) {\n" +
                 "        if ((a.real == b.real) && (a.imaginary == b.imaginary)) {\n" +
                 "            return true;\n" +
@@ -898,7 +898,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String lessComplexFunc() {
+    public static String lessComplexFunc() {
         return "public boolean less(Complex a, Complex b) {\n" +
                 "        if (a.real < b.real) {\n" +
                 "            return true;\n" +
@@ -912,7 +912,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String lessEqComplexFunc() {
+    public static String lessEqComplexFunc() {
         return "public boolean lessEq(Complex a, Complex b) {\n" +
                 "        if (a.real < b.real) {\n" +
                 "            return true;\n" +
@@ -927,7 +927,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String grEqComplexFunc() {
+    public static String grEqComplexFunc() {
         return "public boolean grEq(Complex a, Complex b) {\n" +
                 "        if (a.real > b.real) {\n" +
                 "            return true;\n" +
@@ -942,7 +942,7 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String grComplexFunc() {
+    public static String grComplexFunc() {
         return "public boolean gr(Complex a, Complex b) {\n" +
                 "        if (a.real > b.real) {\n" +
                 "            return true;\n" +
@@ -955,7 +955,7 @@ public class Mapper {
                 "        return false;\n" +
                 "    }\n";
     }
-    public String neqComplexFunc() {
+    public static String neqComplexFunc() {
         return "public boolean neq(Complex a, Complex b) {\n" +
                 "        if ((a.real != b.real) || (a.imaginary != b.imaginary)) {\n" +
                 "            return true;\n" +
@@ -965,49 +965,49 @@ public class Mapper {
                 "    }\n";
     }
 
-    public String re() {
+    public static String re() {
         return "public double re(Complex a){\n" +
                 "        return a.real;\n" +
                 "    }\n";
     }
 
-    public String im() {
+    public static String im() {
         return "public double im(Complex a){\n" +
                 "        return a.imaginary;\n" +
                 "    }\n";
     }
 
-    public String complInt() {
+    public static String complInt() {
         return "public Complex compl(int a) {\n" +
                 "        return new Complex(a, 0);\n" +
                 "    }\n";
     }
 
-    public String complReal() {
+    public static String complReal() {
         return "public Complex compl(double a) {\n" +
                 "        return new Complex(a, 0);\n" +
                 "    }\n";
     }
 
-    public String complRealReal() {
+    public static String complRealReal() {
         return "public Complex compl(double a, double b) {\n" +
                 "        return new Complex(a, b);\n" +
                 "    }\n";
     }
 
-    public String complRealInt() {
+    public static String complRealInt() {
         return "public Complex compl(double a, int b) {\n" +
                 "        return new Complex(a, b);\n" +
                 "    }\n";
     }
 
-    public String complIntReal() {
+    public static String complIntReal() {
         return "public Complex compl(int a, double b) {\n" +
                 "        return new Complex(a, b);\n" +
                 "    }\n";
     }
 
-    public String complIntInt() {
+    public static String complIntInt() {
         return "public Complex compl(int a, int b) {\n" +
                 "        return new Complex(a, b);\n" +
                 "    }\n";
