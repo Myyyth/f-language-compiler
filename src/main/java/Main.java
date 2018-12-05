@@ -17,10 +17,6 @@ public class Main {
 
         (new CodeCompiler()).compile("Run", s);
         (new Interpreter()).run("Run");
-
-<<<<<<< HEAD
-
-=======
         /*
         final Callable a = new Callable() {
             public Object call() throws Exception {
@@ -62,6 +58,5 @@ public class Main {
     static void printHello(StringBuilder prep) {
         prep.append("Hello");
         System.out.println("hello");
->>>>>>> code-generation
     }
 }

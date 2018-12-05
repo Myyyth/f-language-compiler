@@ -831,7 +831,8 @@ public class Mapper {
                 "            newArr[k] = b[i];\n" +
                 "            k++;\n" +
                 "        }\n" +
-                "        return newArr;\n" +
+                "        return newArr;\n";
+    }
 
     public String subComplexWithRealRightFunc() {
         return "public Complex sub(Complex a, real b) {\n" +
