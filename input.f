@@ -1,1 +1,5 @@
-d: complex is 1.2i3.4;
+if a>0 then
+a := -2;
+else
+a := 2;
+end;
