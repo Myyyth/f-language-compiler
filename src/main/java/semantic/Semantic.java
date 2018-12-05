@@ -26,9 +26,9 @@ public class Semantic {
             if (tokens.get(globalIterator).getType().name().equals("IDENTIFIER")) {
                 String msg = checkInd();
                 if (msg != null) {
-                    return msg;
+                    System.out.println("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + msg);
+                    System.exit(1);
                 }
-
             } else {
                 globalIterator++;
             }
@@ -42,7 +42,6 @@ public class Semantic {
 
     private String checkInd() {
         //TODO :real is int
-        //TODO write in IS for function like in :
         int ind = globalIterator;
         globalIterator++;
         if (tokens.get(globalIterator).getLexeme().equals("is")) {
@@ -60,6 +59,9 @@ public class Semantic {
                 return Integer.toString(tokens.get(globalIterator).getRow());
             }
         } else if (tokens.get(globalIterator).getLexeme().equals(":")) {
+            if (variables.get(tokens.get(globalIterator-1).getLexeme()) != null){
+                return Integer.toString(tokens.get(globalIterator-1).getRow());
+            }
             globalIterator++;
             String oType = hardType(tokens.get(globalIterator).getLexeme());
             globalIterator += 2;
@@ -74,9 +76,9 @@ public class Semantic {
                 } else {
                     return type;
                 }
-
-            } else {
-                return Integer.toString(tokens.get(globalIterator).getColumn());
+            }
+            else {
+                return Integer.toString(tokens.get(globalIterator).getRow());
             }
         } else if (tokens.get(globalIterator).getLexeme().equals(":=")) {
             if (variables.get(tokens.get(ind).getLexeme()) == null) {
@@ -99,12 +101,13 @@ public class Semantic {
         return null;
     }
 
-    private Tree checkExp(ArrayList<Token> expTokens) {
+    public Tree checkExp(ArrayList<Token> expTokens) {
         if (tokens.get(globalIterator).getLexeme().equals("func")) {
             return checkFunction();
         }
         if (expTokens.size() == 0) {
             int localIt = globalIterator;
+            //TODO find end
             while (!tokens.get(localIt).getLexeme().equals(";")) {
                 expTokens.add(tokens.get(localIt));
                 localIt++;
@@ -151,7 +154,7 @@ public class Semantic {
         }
         for (int i = 0; i < expTokens.size(); i++) {
             String t = expTokens.get(i).getLexeme();
-            if (t.equals("(") && i > 0 && !expTokens.get(i - 1).getLexeme().equals("func")) {
+            if (t.equals("(") && i > 0 && !expTokens.get(i - 1).getType().name().equals("IDENTIFIER")) {
                 for (int j = 0; j < expTokens.size(); j++)
                     if (expTokens.get(j).getLexeme().equals(")")) {
                         tree.setValue(expTokens.get(i));
@@ -162,9 +165,35 @@ public class Semantic {
         }
         for (int i = 0; i < expTokens.size(); i++) {
             String t = expTokens.get(i).getLexeme();
-            if (t.equals("func")) {
-                tree.setValue(expTokens.get(i));
-                tree.setLeft(checkFunction());
+            if (expTokens.get(i).getType().name().equals("IDENTIFIER") &&
+                    i != expTokens.size()-1 && expTokens.get(i+1).getLexeme().equals("(")) {
+                Token val = expTokens.get(i);
+                i+=2;
+                ArrayList<String> predInput = variables.get(val.getLexeme()).getInput();
+                ArrayList<String> input = new ArrayList<String>();
+                while (!expTokens.get(i).getLexeme().equals(")")){
+                    if (expTokens.get(i).getLexeme().equals(",")){
+                        i++;
+                        continue;
+                    }
+                    if (expTokens.get(i).getType().equals("IDENTIFIER") &&
+                            variables.get(expTokens.get(i).getLexeme())!= null) {
+                        input.add(variables.get(expTokens.get(i).getLexeme()).getType());
+                    }
+                    else {
+                        input.add(expTokens.get(i).getType().name());
+                    }
+                    i++;
+                }
+                if (input.size() == predInput.size()){
+                    for (int j =0; j< input.size(); j++){
+                        if (input.get(j) != predInput.get(j)){
+                            System.out.println("OSHIBKA");
+                            System.exit(1);
+                        }
+                    }
+                }
+                tree.setValue(val);
                 return tree;
             }
         }
@@ -180,7 +209,6 @@ public class Semantic {
     }
 
     private Tree checkFunction() {
-        //TODO delete input and local
         int ind = globalIterator - 2;
         globalIterator += 1;
         Map<String, Variable> localVariables = new HashMap<String, Variable>();
@@ -213,12 +241,20 @@ public class Semantic {
                 predType = hardType(tokens.get(globalIterator).getLexeme());
             }
             globalIterator += 2;
-            while(!tokens.get(globalIterator).getLexeme().equals("end")){
+            int h = 0;
+            while(!tokens.get(globalIterator).getLexeme().equals("end") || h != 0){
+                String t = tokens.get(globalIterator).getLexeme();
+                if (t.equals("if") || t.equals("do") || t.equals("loop")){
+                    h++;
+                }
+                if (t.equals("end")){
+                    h--;
+                }
                 funcTokens.add(tokens.get(globalIterator));
                 globalIterator++;
             }
 
-            SemanticForFunction semanticForFunction = new SemanticForFunction(funcTokens, new HashMap<String, Variable>(variables));
+            SemanticForFunction semanticForFunction = new SemanticForFunction(funcTokens, new HashMap<String, Variable>(variables), funcVariables);
             String type = semanticForFunction.analyze();
             if (type == null || (predType!= null && type != predType)){
                 return null;
@@ -228,6 +264,8 @@ public class Semantic {
                 variables.get(tokens.get(ind).getLexeme()).setList(new ArrayList<String>(input.subList(0, input.size() - 1)));
             }
         }
+        input = new ArrayList<String>();
+        funcVariables = new HashMap<String, Variable>();
         Tree ans = new Tree();
         ans.setValue(tokens.get(ind));
         return ans;
@@ -248,9 +286,13 @@ public class Semantic {
             return t.getType().name(); //TODO all types
         }
         if (t.getType().name().equals("OPERATOR")) {
-            String left = foundType(tree.getLeft());
-            String right = foundType(tree.getRight());
-            if (right == null || left == null) {
+            String left = null;
+            String right = null;
+            if (tree.getLeft()!=null)
+                left = foundType(tree.getLeft());
+            if (tree.getRight()!=null)
+                right = foundType(tree.getRight());
+            if (right == null && left == null) {
                 return null;
             }
             return answerType(t.getLexeme(), left, right);
@@ -269,7 +311,7 @@ public class Semantic {
             if (right == "REAL_NUMBER" || left == "REAL_NUMBER") {
                 return "REAL_NUMBER";
             }
-            if (right == "INTEGER" && left == "INTEGER") {
+            if (right == "INTEGER" || left == "INTEGER") {
                 return "INTEGER";
             }
         }
@@ -283,7 +325,7 @@ public class Semantic {
             if (right == "REAL_NUMBER" || left == "REAL_NUMBER") {
                 return "REAL_NUMBER";
             }
-            if (right == "INTEGER" && left == "INTEGER") {
+            if (right == "INTEGER" || left == "INTEGER") {
                 return "REAL_NUMBER";
             }
         }

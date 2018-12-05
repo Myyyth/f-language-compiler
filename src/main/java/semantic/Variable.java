@@ -18,6 +18,9 @@ public class Variable {
     public String getType(){
         return type;
     }
+    public ArrayList<String> getInput(){
+        return input;
+    }
 
     public void setList(ArrayList<String> list){
         input = list;

@@ -333,7 +333,7 @@ public class Lexer {
             keyword = "if";
         else if (isNext(position, 4) && nextChar(position, 4).equals("then") && !isIdentidierPart(nextChar(position + 4)))
             keyword = "then";
-        else if (isNext(position, 4) && nextChar(position, 4).equals("then") && !isIdentidierPart(nextChar(position + 4)))
+        else if (isNext(position, 4) && nextChar(position, 4).equals("else") && !isIdentidierPart(nextChar(position + 4)))
             keyword = "else";
         else if (isNext(position, 3) && nextChar(position, 3).equals("for") && !isIdentidierPart(nextChar(position + 3)))
             keyword = "for";

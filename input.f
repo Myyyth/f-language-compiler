@@ -1,5 +1,2 @@
-incGenerator is func(p:real):integer do
- f is 2;
- return f;
-end;
-a is 3;
+a is -2;
+b:real is a;
