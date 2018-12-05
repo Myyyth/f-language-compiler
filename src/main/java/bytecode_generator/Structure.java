@@ -9,11 +9,17 @@ public class Structure implements Runnable {
         public double real;
         public double imaginary;
 
-        public Complex() { }
+        public Complex() {
+        }
 
         public Complex(double real, double imaginary) {
             this.real = real;
             this.imaginary = imaginary;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(real) + "i" + String.valueOf(imaginary);
         }
     }
 
