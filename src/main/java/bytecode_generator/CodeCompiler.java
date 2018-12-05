@@ -1,5 +1,7 @@
 package bytecode_generator;
 
+import lexer.Lexer;
+
 import javax.tools.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -17,13 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CodeCompiler {
-    public void compile(String fileName) throws IOException {
-        String classDef = ""
-                + "public class " + fileName + " implements Runnable {"
-                + "  public void run() {" +
-                "        System.out.println(\"Hello\");" +
-                "    }"
-                + "}";
+    public void compile(String fileName, String sourceCode) throws Exception {
+        String classDef = new ConvertToJava(new Lexer(new StringBuilder(sourceCode)).parse()).convert(fileName);
 
         String directoryName = "target/classes/src/";
         Path sourceFile = Paths.get(directoryName + "/" + fileName + ".java");
