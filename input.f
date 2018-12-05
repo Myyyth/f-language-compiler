@@ -1,1 +1,1 @@
-d: integer is 5;
+d: complex is 1.2i3.4;

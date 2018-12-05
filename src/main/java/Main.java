@@ -7,5 +7,7 @@ public class Main {
     public static void main(String[] args) throws InstantiationException, IllegalAccessException, IOException, ClassNotFoundException {
         (new CodeCompiler()).compile("Run");
         (new Interpreter()).run("Run");
+
+
     }
 }
