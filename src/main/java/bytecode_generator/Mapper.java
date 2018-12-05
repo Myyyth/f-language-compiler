@@ -187,7 +187,6 @@ public class Mapper {
                 "        return false;\n" +
                 "    }\n";
     }
-
     public String neqComplexFunc() {
         return "public boolean neq(Complex a, Complex b) {\n" +
                 "        if ((a.real != b.real) || (a.imaginary != b.imaginary)) {\n" +
