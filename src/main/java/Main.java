@@ -9,7 +9,8 @@ import java.util.concurrent.Callable;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        String s = "arr: [integer] is [1,2,3];";
+        String s = "arr: [integer] is [1,2,3];\n" +
+                    "b: integer is arr[0];";
 
         Integer a = new Integer(10);
         Double c = new Double(10);
