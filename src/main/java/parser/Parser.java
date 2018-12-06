@@ -985,7 +985,7 @@ public class Parser {
                 right.setRight(statement());
                 if (right.getRight() == null) {
                     globalIterator = localIterator;
-                    return null;
+                    return new Tree();
                 }
                 right = rightmost(right);
                 right.setRight(new Tree());
@@ -1039,6 +1039,23 @@ public class Parser {
         }
         if (tokens.get(globalIterator).getLexeme().equals("break")) {
             return new Tree(null, null, tokens.get(globalIterator));
+        }
+        if (tokens.get(globalIterator).getLexeme().equals("print")) {
+            globalIterator++;
+            if (tokens.get(globalIterator).getLexeme().equals("(")) {
+                localIterator = globalIterator;
+                if (expressions() != null) {
+                    globalIterator++;
+                    if (tokens.get(globalIterator).getLexeme().equals(")")) {
+                        return new Tree();
+                    }
+                    globalIterator--;
+                    return null;
+                }
+                globalIterator = localIterator;
+                return null;
+            }
+            return null;
         }
         globalIterator--;
         return null;
@@ -1119,11 +1136,6 @@ public class Parser {
                 if (tokens.get(globalIterator).getLexeme().equals("end")) {
                     rightLocal.setValue(tokens.get(globalIterator));
                     local.setRight(rightLocal);
-                    globalIterator++;
-                    if (tokens.get(globalIterator).getLexeme().equals(";")) {
-                        return local;
-                    }
-                    globalIterator--;
                     return local;
                 }
                 globalIterator--;
@@ -1178,8 +1190,9 @@ public class Parser {
                 globalIterator = localIterator;
                 return null;
             }
+        } else {
+            globalIterator--;
         }
-        globalIterator--;
         localIterator = globalIterator;
         if (loopBody() == null) {
             globalIterator = localIterator;
@@ -1199,11 +1212,6 @@ public class Parser {
             }
             globalIterator++;
             if (tokens.get(globalIterator).getLexeme().equals("end")) {
-                globalIterator++;
-                if (tokens.get(globalIterator).getLexeme().equals(";")) {
-                    return new Tree();
-                }
-                globalIterator--;
                 return new Tree();
             }
             globalIterator--;
