@@ -163,6 +163,9 @@ public class ConvertToJava {
                 convertKeyword();
             }
             code.append(convertDeclarations());
+            if (position >= tokens.size()) {
+                break;
+            }
             if (tokens.get(position).getLexeme().equals(";"))
                 position++;
         }
@@ -307,7 +310,7 @@ public class ConvertToJava {
             }
             position++;
             StringBuilder elements = new StringBuilder("{");
-            while (!tokens.get(position).equals("]")) {
+            while (!tokens.get(position).getLexeme().equals("]")) {
                 if (tokens.get(position).getType() == Token.TokenType.PUNCTUATION) {
                     elements.append(tokens.get(position).getLexeme());
                 } else {
@@ -320,7 +323,8 @@ public class ConvertToJava {
                 }
             }
             elements.append("}");
-            code.append(arrType+"[] " + identifier + " = new "+arrType+"[]"+elements);
+            position++;
+            code.append(arrType+"[] " + identifier + " = new "+arrType+"[]"+elements+";\n");
         }
         else if(tokens.get(position).getLexeme().equals("is") && tokens.get(position+1).getLexeme().equals("func")) {
             position+=3;
@@ -477,7 +481,14 @@ public class ConvertToJava {
     private StringBuilder convertExpression() {
         StringBuilder code = new StringBuilder();
         while (!tokens.get(position).getLexeme().equals(";")) {
-            if (!(tokens.get(position).getType().equals(Token.TokenType.IDENTIFIER) && tokens.get(position+1).getLexeme().equals("("))) {
+            if (position+3 < tokens.size() && tokens.get(position+3).getLexeme().equals("[")) {
+                position += 2;
+                String identifier = tokens.get(position).getLexeme();
+                position += 1;
+                StringBuilder index = convertExpression();
+                code.append(identifier+index);
+            }
+            else if (!(tokens.get(position).getType().equals(Token.TokenType.IDENTIFIER) && tokens.get(position+1).getLexeme().equals("("))) {
                 code.append(tokens.get(position).getLexeme());
                 position++;
             }
