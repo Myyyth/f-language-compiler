@@ -28,20 +28,226 @@ public class ConvertToJava {
                 "  } catch (Exception e) {}" +
                 "    }\n"
 
-                + "}\n" ; // TODO add structure code
+                + "}\n" + // TODO add structure code
+                "    }\n" +
+                Mapper.addBooleanArrayArray() +
+                Mapper.addBooleanArrayEntity() +
+                Mapper.addIntArrayArray() +
+                Mapper.addIntArrayEntity() +
+                Mapper.addIntInt() +
+                Mapper.addIntRational() +
+                Mapper.addIntReal() +
+                Mapper.addRationalArrayArray() +
+                Mapper.addRationalArrayEntity() +
+                Mapper.addRationalInt() +
+                Mapper.addRationalRational() +
+                Mapper.addRealArrayArray() +
+                Mapper.addRealArrayEntity() +
+                Mapper.addRealInt() +
+                Mapper.addRealReal() +
+                Mapper.addStringArrayArray() +
+                Mapper.addStringArrayEntity() +
+                Mapper.complInt() +
+                Mapper.complIntInt() +
+                Mapper.complReal() +
+                Mapper.complIntReal() +
+                Mapper.complRealInt() +
+                Mapper.complRealReal() +
+                Mapper.denomRat() +
+                Mapper.divComplexFunc() +
+                Mapper.divComplexWithLeftIntFunc() +
+                Mapper.divComplexWithRealLeftFunc() +
+                Mapper.divComplexWithRealRightFunc() +
+                Mapper.divIntInt() +
+                Mapper.divIntRational() +
+                Mapper.divIntReal() +
+                Mapper.divRationalInt() +
+                Mapper.divRationalRational() +
+                Mapper.divRealInt() +
+                Mapper.divRealReal() +
+                Mapper.eqComplexFunc() +
+                Mapper.equalIntInt() +
+                Mapper.equalIntRational() +
+                Mapper.equalIntReal() +
+                Mapper.equalRationalInt() +
+                Mapper.equalRationalRational() +
+                Mapper.equalRealInt() +
+                Mapper.equalRealReal() +
+                Mapper.exclusiveOrBoolBool() +
+                Mapper.grComplexFunc() +
+                Mapper.grEqComplexFunc() +
+                Mapper.im() +
+                Mapper.lessComplexFunc() +
+                Mapper.lessEqComplexFunc() +
+                Mapper.lessEqualIntInt() +
+                Mapper.lessEqualIntRational() +
+                Mapper.lessEqualIntReal() +
+                Mapper.lessEqualRationalInt() +
+                Mapper.lessEqualRationalRational() +
+                Mapper.lessEqualRealInt() +
+                Mapper.lessEqualRealReal() +
+                Mapper.lessIntInt() +
+                Mapper.lessIntRational() +
+                Mapper.lessIntReal() +
+                Mapper.lessRationalInt() +
+                Mapper.lessRationalRational() +
+                Mapper.lessRealInt() +
+                Mapper.lessRealReal() +
+                Mapper.logicalAndBoolBool() +
+                Mapper.logicalOrBoolBool() +
+                Mapper.moreEqualIntInt() +
+                Mapper.moreEqualIntRational() +
+                Mapper.moreEqualIntReal() +
+                Mapper.moreEqualRationalInt() +
+                Mapper.moreEqualRationalRational() +
+                Mapper.moreEqualRealInt() +
+                Mapper.moreEqualRealReal() +
+                Mapper.moreIntInt() +
+                Mapper.moreIntRational() +
+                Mapper.moreIntReal() +
+                Mapper.moreRationalInt() +
+                Mapper.moreRationalRational() +
+                Mapper.moreRealInt() +
+                Mapper.moreRealReal() +
+                Mapper.mulComplexFunc() +
+                Mapper.mulComplexWithIntFunc() +
+                Mapper.mulComplexWithRealFunc() +
+                Mapper.multIntInt() +
+                Mapper.multIntRational() +
+                Mapper.multIntReal() +
+                Mapper.multRationalInt() +
+                Mapper.multRationalRational() +
+                Mapper.multRealInt() +
+                Mapper.multRealReal() +
+                Mapper.neqComplexFunc() +
+                Mapper.normRat() +
+                Mapper.notEqualIntInt() +
+                Mapper.notEqualIntRational() +
+                Mapper.notEqualIntReal() +
+                Mapper.notEqualRationalInt() +
+                Mapper.notEqualRationalRational() +
+                Mapper.notEqualRealInt() +
+                Mapper.notEqualRealReal() +
+                Mapper.numRat() +
+                Mapper.ratInt() +
+                Mapper.ratIntInt() +
+                Mapper.re() +
+                Mapper.roundRat() +
+                Mapper.roundReal() +
+                Mapper.subComplexFunc() +
+                Mapper.subComplexWithIntLeftFunc() +
+                Mapper.subComplexWithIntRightFunc() +
+                Mapper.subComplexWithRealLeftFunc() +
+                Mapper.subComplexWithRealRightFunc() +
+                Mapper.subtractIntInt() +
+                Mapper.subtractIntRational() +
+                Mapper.subtractIntReal() +
+                Mapper.subtractRationalInt() +
+                Mapper.subtractRationalRational() +
+                Mapper.subtractRealInt() +
+                Mapper.subtractRealReal() +
+                Mapper.sumComplexFunc() +
+                Mapper.sumComplexWithIntFunc() +
+                Mapper.sumComplexWithRealFunc()
+                + "} \n" + Mapper.createComplexClass() +
+                Mapper.createRationalClass(); // TODO add structure code
         return source;
     }
 
     private String convertTokens() {
         StringBuilder code = new StringBuilder();
         deleteWhitespaces();
+        convertOperatorsToJava();
         while (position < tokens.size()) {
+            if (tokens.get(position).getType() == Token.TokenType.KEYWORD) {
+                convertKeyword();
+            }
             code.append(convertDeclarations());
             if (tokens.get(position).getLexeme().equals(";"))
                 position++;
         }
 
         return code.toString();
+    }
+
+    private StringBuilder convertKeyword() {
+        StringBuilder code = new StringBuilder();
+        if (tokens.get(position).getLexeme().equals("while")) {
+            code.append("while (");
+            position++;
+            while (!tokens.get(position).getLexeme().equals("loop")) {
+                if (tokens.get(position).getType() == Token.TokenType.IDENTIFIER ||
+                        tokens.get(position).getType() == Token.TokenType.OPERATOR ||
+                        tokens.get(position).getType() == Token.TokenType.BOOLEAN ||
+                        tokens.get(position).getType() == Token.TokenType.REAL_NUMBER ||
+                        tokens.get(position).getType() == Token.TokenType.INTEGER) {
+                    code.append(tokens.get(position).getLexeme());
+                }
+                position++;
+            }
+            code.append(") {\n");
+            while (!tokens.get(position).getLexeme().equals("end")) {
+                position++;
+                if (position >= tokens.size()) {
+                    break;
+                }
+                code.append(convertExpression());
+                code.append(";\n");
+                position++;
+                if (!tokens.get(position).getLexeme().equals("end")) {
+                    position--;
+                }
+            }
+            code.append("}\n");
+        } else {
+            if (tokens.get(position).getLexeme().equals("if")) {
+                code.append("if (");
+                position++;
+                while (!tokens.get(position).getLexeme().equals("then")) {
+                    if (tokens.get(position).getType() == Token.TokenType.IDENTIFIER ||
+                            tokens.get(position).getType() == Token.TokenType.OPERATOR ||
+                            tokens.get(position).getType() == Token.TokenType.BOOLEAN ||
+                            tokens.get(position).getType() == Token.TokenType.REAL_NUMBER ||
+                            tokens.get(position).getType() == Token.TokenType.INTEGER) {
+                        code.append(tokens.get(position).getLexeme());
+                    }
+                    position++;
+                }
+                code.append(") {\n");
+                while (!tokens.get(position).getLexeme().equals("else") && !tokens.get(position).getLexeme().equals("end")) {
+                    position++;
+                    if (position >= tokens.size()) {
+                        break;
+                    }
+                    code.append(convertExpression());
+                    code.append(";\n");
+                    position++;
+                    if (!tokens.get(position).getLexeme().equals("else") && !tokens.get(position).getLexeme().equals("end")) {
+                        position--;
+                    }
+                }
+                if (tokens.get(position).getLexeme().equals("else")) {
+                    code.append("} else {\n");
+                    while (!tokens.get(position).getLexeme().equals("end")) {
+                        position++;
+                        if (position >= tokens.size()) {
+                            break;
+                        }
+                        code.append(convertExpression());
+                        code.append(";\n");
+                        position++;
+                        if (!tokens.get(position).getLexeme().equals("end")) {
+                            position--;
+                        }
+                    }
+                    code.append(convertExpression());
+                    code.append(";\n");
+                    position++;
+                }
+                code.append("}\n");
+            }
+        }
+        return code;
     }
 
     private StringBuilder convertDeclarations() {
@@ -91,6 +297,30 @@ public class ConvertToJava {
             types.put(identifier, "String");
             position+=2;
             code.append("String " + identifier + "= new String(" + convertExpression() + ");\n");
+        }
+        else if (tokens.get(position).getLexeme().equals("[")) {
+            position++;
+            String arrType = convertToJavaType(tokens.get(position).getLexeme());
+            position++;
+            while (!tokens.get(position).getLexeme().equals("[")) {
+                position++;
+            }
+            position++;
+            StringBuilder elements = new StringBuilder("{");
+            while (!tokens.get(position).equals("]")) {
+                if (tokens.get(position).getType() == Token.TokenType.PUNCTUATION) {
+                    elements.append(tokens.get(position).getLexeme());
+                } else {
+                    elements.append("new " + convertTokenTypeToJava(tokens.get(position).getType()) +"(" + tokens.get(position).getLexeme() + ")");
+                }
+                position++;
+                if (position >= tokens.size()) {
+                    position--;
+                    break;
+                }
+            }
+            elements.append("}");
+            code.append(arrType+"[] " + identifier + " = new "+arrType+"[]"+elements);
         }
         else if(tokens.get(position).getLexeme().equals("is") && tokens.get(position+1).getLexeme().equals("func")) {
             position+=3;
@@ -290,6 +520,39 @@ public class ConvertToJava {
         else if (type.equals("String"))
             return "String";
         return null;
+    }
+
+    private String convertTokenTypeToJava(Token.TokenType type) {
+        if (type == Token.TokenType.INTEGER) {
+            return "Integer";
+        }
+        if (type == Token.TokenType.REAL_NUMBER) {
+            return "Double";
+        }
+        if (type == Token.TokenType.COMPLEX_NUMBER) {
+            return "Complex";
+        }
+        if (type == Token.TokenType.BOOLEAN) {
+            return "Boolean";
+        }
+        if (type == Token.TokenType.RATIONAL_NUMBER) {
+            return "Rational";
+        }
+        if (type == Token.TokenType.STRING) {
+            return "String";
+        }
+        return null;
+    }
+
+    private void convertOperatorsToJava() {
+        for (Token token: tokens) {
+            if (token.getLexeme().equals(":=")) {
+                token.setLexeme("=");
+            }
+            if (token.getLexeme().equals("/=")) {
+                token.setLexeme("!=");
+            }
+        }
     }
 
     private void deleteWhitespaces() {

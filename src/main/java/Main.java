@@ -16,7 +16,6 @@ public class Main {
 
         (new CodeCompiler()).compile("Run", s1);
         (new Interpreter()).run("Run");
-
     }
 
     static void fun(Callable f) throws Exception {
