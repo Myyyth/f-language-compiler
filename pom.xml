@@ -7,6 +7,13 @@
     <groupId>org</groupId>
     <artifactId>f-language-compiler</artifactId>
     <version>0.1 ALPHA</version>
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.5</version>
+        </dependency>
+    </dependencies>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.antlr/antlr4-runtime -->
@@ -14,6 +21,12 @@
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
             <version>4.7.1</version>
+        </dependency>
+        <!-- ASM for bytecode generation https://asm.ow2.io/ -->
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>7.0</version>
         </dependency>
     </dependencies>
     <build>
