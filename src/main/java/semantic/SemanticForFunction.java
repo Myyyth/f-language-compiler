@@ -39,9 +39,11 @@ public class SemanticForFunction {
                 }
             } else if (tokens.get(globalIterator).getType().name().equals("KEYWORD") &&
                     tokens.get(globalIterator).getLexeme().equals("end")) {
-                if (!iter.get(iter.size() - 1).equals(""))
-                    variables.remove(iter.get(iter.size() - 1));
-                iter.remove(iter.size() - 1);
+                if (iter.size() > 0) {
+                    if (!iter.get(iter.size() - 1).equals(""))
+                        variables.remove(iter.get(iter.size() - 1));
+                    iter.remove(iter.size() - 1);
+                }
                 globalIterator++;
             } else if (tokens.get(globalIterator).getType().name().equals("KEYWORD") &&
                     tokens.get(globalIterator).getLexeme().equals("if")) {

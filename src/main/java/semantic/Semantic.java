@@ -407,8 +407,7 @@ public class Semantic {
                 globalIterator++;
             }
 
-            SemanticForFunction semanticForFunction = new SemanticForFunction(funcTokens, new HashMap<String, Variable>(variables), funcVariables);
-            String type = semanticForFunction.analyze();
+            String type = new SemanticForFunction(funcTokens, new HashMap<String, Variable>(variables), funcVariables).analyze();
             if (type == null || (predType != null && type != predType)) {
                 return null;
             }
