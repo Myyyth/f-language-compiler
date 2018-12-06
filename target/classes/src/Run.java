@@ -605,12 +605,18 @@ class Complex {
 class Rational {
         public int num;
         public int denom;
-        public Rational(int num, int denom) {
-            this.num = num;
-            this.denom = denom;
+        public Rational(String number) {
+        String parts[] = number.split("\\\\");
+        String numer = parts[0];
+        String denom = parts[1];            this.num = Integer.valueOf(numer);
+            this.denom = Integer.valueOf(denom);
         }
+        public Rational(int num, int denom) {
+                            this.num = num;
+                            this.denom = denom;
+                       }
 @Override
         public String toString() {
-            return String.valueOf(num) + "/" + String.valueOf(denom);
+            return String.valueOf(num) + "\\" + String.valueOf(denom);
         }
     }

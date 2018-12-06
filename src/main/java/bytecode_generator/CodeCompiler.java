@@ -23,11 +23,13 @@ import java.util.List;
 
 public class CodeCompiler {
     public void compile(String fileName, String sourceCode) throws Exception {
-        ArrayList<Token> tokens = new Lexer(new StringBuilder(sourceCode)).parse();
+        Lexer lexer = new Lexer(new StringBuilder(sourceCode));
+        ArrayList<Token> tokens = lexer.parse();
         if (new Parser(tokens).parse() == null) {
             throw new Exception("Syntax error");
         };
-        new Semantic(new ArrayList<Token>(tokens)).analyze();
+        Lexer lexer2 = new Lexer(new StringBuilder(sourceCode));
+        new Semantic(lexer2.parse()).analyze();
         String classDef = new ConvertToJava(tokens).convert(fileName);
 
         String directoryName = "target/classes/src/";

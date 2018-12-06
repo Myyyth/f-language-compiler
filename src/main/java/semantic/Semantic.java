@@ -246,8 +246,8 @@ public class Semantic {
                         }
                     }
                 } else {
-                    System.out.println("y Bac oLLlu6Ka(HeCoBnageHue TunoB) Ha CTPOKE HOMEP " +
-                            Integer.toString(expTokens.get(globalIterator).getRow() + 1));
+                    System.out.println("y Bac oLLlu6Ka(HeCoBnageHue TunoB nAPAMETPOB u/|u uX ko/|u4ecTBa) Ha CTPOKE HOMEP " +
+                            Integer.toString(expTokens.get(i).getRow() + 1));
                     System.exit(2);
                 }
                 tree.setValue(val);
