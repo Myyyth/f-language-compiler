@@ -5,7 +5,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class Mapper {
     public static String createComplexClass() {
-        return "public class Complex {\n" +
+        return "class Complex {\n" +
                 "        public double real;\n" +
                 "        public double imaginary;\n" +
                 "\n" +
@@ -15,19 +15,7 @@ public class Mapper {
                 "            this.real = real;\n" +
                 "            this.imaginary = imaginary;\n" +
                 "        }\n" +
-                "@Override\n" +
-                "        public String toString() {\n" +
-                "            return String.valueOf(real) + \"i\" + String.valueOf(imaginary);\n" +
-                "        }\n" +
                 "    }\n";
-    }
-
-    public static String createComplexObject(String var, double real, double imaginary) {
-        return "Complex "+var+" = new Complex("+real+", "+imaginary+");\n";
-    }
-
-    public static String printObject(String var) {
-        return "System.out.println("+var+".toString());\n";
     }
 
     public static String sumComplexFunc() {
@@ -38,13 +26,13 @@ public class Mapper {
 
     public static String sumComplexWithIntFunc() {
         return "public Complex sum(Complex a, int b) {\n" +
-                "        return new Complex(a.real + b, a);\n" +
+                "        return new Complex(a.real + b, a.imaginary);\n" +
                 "    }\n";
     }
 
     public static String sumComplexWithRealFunc() {
-        return "public Complex sum(Complex a, real b) {\n" +
-                "        return new Complex(a.real + b, a);\n" +
+        return "public Complex sum(Complex a, double b) {\n" +
+                "        return new Complex(a.real + b, a.imaginary);\n" +
                 "    }\n";
     }
 
@@ -56,7 +44,7 @@ public class Mapper {
 
     public static String subComplexWithIntRightFunc() {
         return "public Complex sub(Complex a, int b) {\n" +
-                "        return new Complex(a.real - b, a);\n" +
+                "        return new Complex(a.real - b, a.imaginary);\n" +
                 "    }\n";
     }
 
@@ -71,7 +59,7 @@ public class Mapper {
     }
 
     public static String createRationalClass(){
-        return "public class Rational {\n" +
+        return "class Rational {\n" +
                 "        public int num;\n" +
                 "        public int denom;\n" +
                 "        public Rational(int num, int denom) {\n" +
@@ -80,7 +68,7 @@ public class Mapper {
                 "        }\n" +
                 "@Override\n" +
                 "        public String toString() {\n" +
-                "            return String.valueOf(real) + \"i\" + String.valueOf(imaginary);\n" +
+                "            return String.valueOf(num) + \"/\" + String.valueOf(denom);\n" +
                 "        }\n" +
                 "    }\n";
     }
@@ -99,7 +87,7 @@ public class Mapper {
     }
 
     public static String addIntReal(){
-        return "public int addIntInt(int a, int b) {\n" +
+        return "public int addIntReal(int a, int b) {\n" +
                 "        return a + b;\n" +
                 "    }\n";
     }
@@ -831,17 +819,18 @@ public class Mapper {
                 "            newArr[k] = b[i];\n" +
                 "            k++;\n" +
                 "        }\n" +
-                "        return newArr;\n";
+                "        return newArr;\n" +
+                "}\n";
     }
 
     public static String subComplexWithRealRightFunc() {
-        return "public Complex sub(Complex a, real b) {\n" +
-                "        return new Complex(a.real - b, a);\n" +
+        return "public Complex sub(Complex a, double b) {\n" +
+                "        return new Complex(a.real - b, a.imaginary);\n" +
                 "    }\n";
     }
 
     public static String subComplexWithRealLeftFunc() {
-        return "public Complex sub(real a, Complex b) {\n" +
+        return "public Complex sub(double a, Complex b) {\n" +
                 "        return new Complex(a - b.real, b.imaginary);\n" +
                 "    }\n";
     }
@@ -854,30 +843,30 @@ public class Mapper {
 
     public static String mulComplexWithIntFunc() {
         return "public Complex mul(Complex a, int b) {\n" +
-                "        return new Complex(a.real * b, a);\n" +
+                "        return new Complex(a.real * b, a.imaginary);\n" +
                 "    }\n";
     }
 
     public static String mulComplexWithRealFunc() {
-        return "public Complex mul(Complex a, real b) {\n" +
-                "        return new Complex(a.real * b, a);\n" +
+        return "public Complex mul(Complex a, double b) {\n" +
+                "        return new Complex(a.real * b, a.imaginary);\n" +
                 "    }\n";
     }
 
     public static String divComplexFunc() {
         return "public Complex div(Complex a, Complex b) {\n" +
-                "        return new Complex(a.real / b, a);\n" +
+                "        return new Complex(a.real / b.real, a.imaginary / b.imaginary);\n" +
                 "    }\n";
     }
 
     public static String divComplexWithRealRightFunc() {
-        return "public Complex div(Complex a, real b) {\n" +
-                "        return new Complex(a.real / b, a);\n" +
+        return "public Complex div(Complex a, double b) {\n" +
+                "        return new Complex(a.real / b, a.imaginary);\n" +
                 "    }\n";
     }
 
     public static String divComplexWithRealLeftFunc() {
-        return "public Complex div(real a, Complex b) {\n" +
+        return "public Complex div(double a, Complex b) {\n" +
                 "        return new Complex(a / b.real, b.imaginary);\n" +
                 "    }\n";
     }

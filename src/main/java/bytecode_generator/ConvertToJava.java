@@ -26,9 +26,6 @@ public class ConvertToJava {
                 "  try {" +
                 convertTokens() +
                 "  } catch (Exception e) {}" +
-                "    }\n"
-
-                + "}\n" + // TODO add structure code
                 "    }\n" +
                 Mapper.addBooleanArrayArray() +
                 Mapper.addBooleanArrayEntity() +
@@ -148,8 +145,10 @@ public class ConvertToJava {
                 Mapper.subtractRealReal() +
                 Mapper.sumComplexFunc() +
                 Mapper.sumComplexWithIntFunc() +
-                Mapper.sumComplexWithRealFunc()
-                + "} \n" + Mapper.createComplexClass() +
+                Mapper.sumComplexWithRealFunc() +
+                "}\n"+  // TODO add structure code
+
+                Mapper.createComplexClass() +
                 Mapper.createRationalClass(); // TODO add structure code
         return source;
     }
