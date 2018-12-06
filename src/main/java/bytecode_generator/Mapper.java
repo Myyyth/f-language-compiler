@@ -1,8 +1,5 @@
 package bytecode_generator;
 
-import org.objectweb.asm.*;
-import static org.objectweb.asm.Opcodes.*;
-
 public class Mapper {
     public static String createComplexClass() {
         return "class Complex {\n" +

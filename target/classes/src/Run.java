@@ -3,17 +3,17 @@ import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
 public class Run implements Runnable {
   public void run() {
-  try {Integer b= new Integer(5);
-final Integer bd = b;
-class d implements Callable {
-d() {
+  try {Rational a= new Rational(addIntRational(2, new Rational("1\\4")).toString());
+final Rational ab = a;
+class b implements Callable {
+b() {
 }
 public Integer call() throws Exception {
-System.out.println(bd);
+System.out.println(ab);
 return 0;
 }
 }
-Integer c= new Integer((new d()).call().toString());
+Integer c= new Integer((new b()).call().toString());
   } catch (Exception e) {}    }
 public boolean[] addBooleanArrayArray(boolean[] a, boolean[] b) {
         int lenA = a.length;
@@ -605,12 +605,18 @@ class Complex {
 class Rational {
         public int num;
         public int denom;
-        public Rational(int num, int denom) {
-            this.num = num;
-            this.denom = denom;
+        public Rational(String number) {
+        String parts[] = number.split("\\\\");
+        String numer = parts[0];
+        String denom = parts[1];            this.num = Integer.valueOf(numer);
+            this.denom = Integer.valueOf(denom);
         }
+        public Rational(int num, int denom) {
+                            this.num = num;
+                            this.denom = denom;
+                       }
 @Override
         public String toString() {
-            return String.valueOf(num) + "/" + String.valueOf(denom);
+            return String.valueOf(num) + "\\" + String.valueOf(denom);
         }
     }
