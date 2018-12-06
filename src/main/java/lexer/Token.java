@@ -2,7 +2,8 @@ package lexer;
 
 public class Token {
     public enum TokenType {
-        INTEGER, REAL_NUMBER, STRING, PUNCTUATION, KEYWORD, TYPE, BOOLEAN, OPERATOR, WHITE_SPACE, IDENTIFIER, RATIONAL_NUMBER, COMPLEX_NUMBER
+        INTEGER, REAL_NUMBER, STRING, PUNCTUATION, KEYWORD, TYPE, BOOLEAN, OPERATOR, WHITE_SPACE, IDENTIFIER,
+        RATIONAL_NUMBER, COMPLEX_NUMBER
     };
 
     private String lexeme;
@@ -29,6 +30,10 @@ public class Token {
 
     public String getLexeme() {
         return lexeme;
+    }
+
+    public void setLexeme(String lexeme) {
+        this.lexeme = lexeme;
     }
 
     public TokenType getType() {
