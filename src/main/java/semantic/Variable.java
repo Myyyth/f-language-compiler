@@ -8,7 +8,7 @@ import java.util.List;
 public class Variable {
     private Token token;
     private String type;
-    private ArrayList<String> input;
+    private ArrayList<String> input = null;
 
     public Variable(Token token, String type) {
         this.token = token;
@@ -25,4 +25,5 @@ public class Variable {
     public void setList(ArrayList<String> list){
         input = list;
     }
+
 }

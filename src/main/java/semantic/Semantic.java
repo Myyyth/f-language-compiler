@@ -4,6 +4,7 @@ import lexer.Token;
 import parser.Tree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ public class Semantic {
         this.tokens = tokens;
         this.globalIterator = 0;
         this.variables = new HashMap<String, Variable>();
+        addFunctions();
+
     }
 
     public String analyze() {
@@ -52,9 +55,13 @@ public class Semantic {
             }
             String type = foundType(types);
             if (type != null) {
-                if (variables.get(tokens.get(ind).getLexeme()) == null) {
-                    variables.put(tokens.get(ind).getLexeme(), new Variable(tokens.get(ind), type));
-                }
+                if (variables.get(tokens.get(ind).getLexeme()) == null)
+                    if (tokens.get(ind).getType().name() != "TYPE") {
+                        variables.put(tokens.get(ind).getLexeme(), new Variable(tokens.get(ind), type));
+                    }
+                    else{
+                        return type;
+                    }
             } else {
                 return Integer.toString(tokens.get(globalIterator).getRow());
             }
@@ -70,7 +77,7 @@ public class Semantic {
                 return Integer.toString(tokens.get(globalIterator).getRow());
             }
             String type = foundType(types);
-            if (type != null && type == oType) {
+            if (type != null && type.equals(oType)) {
                 if (input.size() == 0) {
                     variables.put(tokens.get(ind).getLexeme(), new Variable(tokens.get(ind), type));
                 } else {
@@ -108,7 +115,7 @@ public class Semantic {
         if (expTokens.size() == 0) {
             int localIt = globalIterator;
             //TODO find end
-            while (!tokens.get(localIt).getLexeme().equals(";")) {
+            while (!tokens.get(localIt).getLexeme().equals(";") && tokens.size()-1>localIt) {
                 expTokens.add(tokens.get(localIt));
                 localIt++;
             }
@@ -169,21 +176,81 @@ public class Semantic {
                     i != expTokens.size()-1 && expTokens.get(i+1).getLexeme().equals("(")) {
                 Token val = expTokens.get(i);
                 i+=2;
-                ArrayList<String> predInput = variables.get(val.getLexeme()).getInput();
                 ArrayList<String> input = new ArrayList<String>();
                 while (!expTokens.get(i).getLexeme().equals(")")){
                     if (expTokens.get(i).getLexeme().equals(",")){
                         i++;
                         continue;
                     }
-                    if (expTokens.get(i).getType().equals("IDENTIFIER") &&
-                            variables.get(expTokens.get(i).getLexeme())!= null) {
-                        input.add(variables.get(expTokens.get(i).getLexeme()).getType());
+                    if (expTokens.get(i).getType().name().equals("IDENTIFIER")) {
+                        if (variables.get(expTokens.get(i).getLexeme())!= null)
+                            input.add(variables.get(expTokens.get(i).getLexeme()).getType());
+                        else {
+                            System.out.println("ASHIBKA");
+                            System.exit(1);
+                        }
                     }
                     else {
                         input.add(expTokens.get(i).getType().name());
                     }
                     i++;
+                }
+                int h = 0;
+                ArrayList<String> predInput = null;
+                if (val.getLexeme().equals("compl")){
+                    if (input.size()==1) {
+                        if (input.get(0) == "INTEGER" || input.get(0) == "REAL_NUMBER") {
+                            predInput = input;
+                        }
+                    }
+                    else if (input.size()== 2) {
+                        if ((input.get(0) == "INTEGER" && input.get(1) == "REAL_NUMBER") ||
+                                (input.get(0) == "INTEGER" && input.get(1) == "INTEGER") ||
+                                (input.get(0) == "REAL_NUMBER" && input.get(1) == "REAL_NUMBER") ||
+                                (input.get(0) == "REAL_NUMBER" && input.get(1) == "INTEGER")){
+                            predInput = input;
+                        }
+                    }
+                }
+                else if (val.getLexeme().equals("rat")){
+                    if (input.size()==1) {
+                        if (input.get(0) == "INTEGER") {
+                            predInput = input;
+                        }
+                    }
+                    else if (input.size()== 2) {
+                        if ((input.get(0) == "INTEGER" && input.get(1) == "INTEGER")){
+                            predInput = input;
+                        }
+                    }
+                }
+                else if (val.getLexeme().equals("round")){
+                    if (input.size()==1) {
+                        if (input.get(0) == "REAL_NUMBER" ) {
+                            predInput = input;
+                            variables.put("round", new Variable(null, "INTEGER"));
+                        }
+                        else if (input.get(0) == "RATIONAL_NUMBER"){
+                            predInput = input;
+                            variables.put("round", new Variable(null, "REAL_NUMBER"));
+                        }
+                    }
+                }
+                else if (val.getLexeme().equals("length")){
+                    if (input.size()==1) {
+                        if (input.get(0).substring(0,5) == "ARRAY" ) {
+                            predInput = input;
+                            variables.put("length", new Variable(null, "INTEGER"));
+                        }
+                    }
+                }
+                if (predInput == null){
+                    if( variables.get(val.getLexeme())!=null && variables.get(val.getLexeme()).getInput()!=null) {
+                        predInput = variables.get(val.getLexeme()).getInput();
+                    }
+                    else {
+                        predInput = new ArrayList<String>();
+                    }
                 }
                 if (input.size() == predInput.size()){
                     for (int j =0; j< input.size(); j++){
@@ -193,14 +260,64 @@ public class Semantic {
                         }
                     }
                 }
+                else {
+                    System.out.println("OSHIBKA");
+                    System.exit(1);
+                }
                 tree.setValue(val);
                 return tree;
             }
         }
         for (int i = 0; i < expTokens.size(); i++) {
             String t = expTokens.get(i).getLexeme();
-            if (expTokens.get(i).getType().name().equals("IDENTIFIER") || expTokens.get(i).getType().name().equals("INTEGER") ||
+            if (expTokens.get(i).getType().name().equals("IDENTIFIER") &&
+                    i != expTokens.size() - 1 && expTokens.get(i + 1).getLexeme().equals("(")) {
+            }
+        }
+        for (int i = 0; i < expTokens.size(); i++) {
+            Token t = expTokens.get(i);
+            if (t.getLexeme().equals("[")) {
+                String type = "";
+                i++;
+                while (!expTokens.get(i).getLexeme().equals("]")){
+                    if (expTokens.get(i).getLexeme().equals(",")){
+                        i++;
+                        continue;
+                    }
+                    String newType = "";
+                    if (expTokens.get(i).getType().name().equals("IDENTIFIER")){
+                        if (variables.get(expTokens.get(i).getLexeme()) != null) {
+                            newType = variables.get(expTokens.get(i).getLexeme()).getType();
+                        }
+                    }
+                    else newType = expTokens.get(i).getType().name();
+                    if (!type.equals("") && !type.equals(newType)){
+                        System.out.println("OSHIBKA IN ARRAY");
+                        System.exit(1);
+                    }
+                    else type = newType;
+                    i++;
+                }
+                t.setLexeme("ARRAY"+type);
+                tree.setValue(t);
+                return tree;
+            }
+        }
+        for (int i = 0; i < expTokens.size(); i++) {
+            String t = expTokens.get(i).getLexeme();
+            if (expTokens.get(i).getType().name().equals("IDENTIFIER") ||
+                    expTokens.get(i).getType().name().equals("INTEGER") ||
                     expTokens.get(i).getType().name().equals("REAL_NUMBER")) { //TODO add all types
+                if (expTokens.get(i).getType().name().equals("IDENTIFIER")){
+                    if ((variables.get(expTokens.get(i).getLexeme()) != null &&
+                            variables.get(expTokens.get(i).getLexeme()).getInput() != null) ||
+                            (funcVariables.get(expTokens.get(i).getLexeme()) != null &&
+                                    funcVariables.get(expTokens.get(i).getLexeme()).getInput() != null) &&
+                                    variables.get(expTokens.get(i).getLexeme()).getInput().size()>0){
+                        System.out.println("OSHIBOCHKA");
+                        System.exit(1);
+                    }
+                }
                 tree.setValue(expTokens.get(i));
                 return tree;
             }
@@ -217,7 +334,24 @@ public class Semantic {
             globalIterator++;
             if (tokens.get(globalIterator).getType().name().equals("IDENTIFIER")) {
                 String type = hardType(tokens.get(globalIterator + 2).getLexeme());
-                localVariables.put(tokens.get(globalIterator).getLexeme(), new Variable(tokens.get(globalIterator), type));
+                if (tokens.get(globalIterator + 2).getLexeme() == "func"){
+                    int f = globalIterator;
+                    ArrayList<String> funcVariables = new ArrayList<String>();
+                    while (!tokens.get(globalIterator).getLexeme().equals(")")) {
+                        globalIterator++;
+                        if (tokens.get(globalIterator).getType().name().equals("IDENTIFIER")) {
+                            String types = hardType(tokens.get(globalIterator + 2).getLexeme());
+                            funcVariables.add(types);
+                            globalIterator += 3;
+                        }
+                    }
+                    type = hardType(tokens.get(globalIterator + 2).getLexeme());
+                    localVariables.put(tokens.get(f).getLexeme(), new Variable(tokens.get(f), type));
+                    localVariables.get(tokens.get(f).getLexeme()).setList(new ArrayList<String>(funcVariables));
+
+                }
+                else
+                    localVariables.put(tokens.get(globalIterator).getLexeme(), new Variable(tokens.get(globalIterator), type));
                 input.add(type);
                 globalIterator += 3;
             }
@@ -226,6 +360,7 @@ public class Semantic {
         input.add("ZAGLUSHKA");
         if (tokens.get(globalIterator+3).getLexeme().equals("=>")){
             tokens.get(globalIterator+3).setLexeme("is");
+            globalIterator+=2;
             String type = checkInd();
             variables.put(tokens.get(ind).getLexeme(), new Variable(tokens.get(ind), type));
             if (input.size() != 1) {
@@ -239,8 +374,9 @@ public class Semantic {
             if (tokens.get(globalIterator).getLexeme().equals(":")){
                 globalIterator++;
                 predType = hardType(tokens.get(globalIterator).getLexeme());
+                globalIterator ++;
             }
-            globalIterator += 2;
+            globalIterator++;
             int h = 0;
             while(!tokens.get(globalIterator).getLexeme().equals("end") || h != 0){
                 String t = tokens.get(globalIterator).getLexeme();
@@ -282,8 +418,11 @@ public class Semantic {
                 return null;
         }
         if (t.getType().name().equals("INTEGER") ||
-                t.getType().name().equals("REAL_NUMBER")) {
+                t.getType().name().equals("REAL_NUMBER") ) {
             return t.getType().name(); //TODO all types
+        }
+        if (t.getLexeme().length()>=5 && t.getLexeme().substring(0,5).equals("ARRAY")){
+            return t.getLexeme();
         }
         if (t.getType().name().equals("OPERATOR")) {
             String left = null;
@@ -302,6 +441,15 @@ public class Semantic {
 
     private String answerType(String type, String left, String right) {
         if (type == "+" || type == "-" || type == "*") {
+            if (right.substring(0,5).equals("ARRAY") && right.equals(left)){
+                return right;
+            }
+            if (right.substring(0,5).equals("ARRAY") && right.substring(5).equals(left)){
+                return right;
+            }
+            if (left.substring(0,5).equals("ARRAY") && left.substring(5).equals(right)){
+                return left;
+            }
             if (right == "COMPLEX_NUMBER" || left == "COMPLEX_NUMBER") {
                 return "COMPLEX_NUMBER";
             }
@@ -360,6 +508,11 @@ public class Semantic {
         if (lex.equals("string")) {
             return "STRING";
         }
+        if (lex.equals("[")) {
+            String type = hardType(tokens.get(globalIterator+1).getLexeme());
+            globalIterator+=2;
+            return "ARRAY" + type;
+        }
         return "";
     }
 
@@ -371,5 +524,30 @@ public class Semantic {
             }
         }
         this.tokens = modified;
+    }
+
+    private void addFunctions(){
+        variables.put("round", new Variable(null, "INTEGER"));
+
+        variables.put("re", new Variable(null, "REAL_NUMBER"));
+        variables.get("re").setList(new ArrayList<String>(Arrays.asList("COMPLEX_NUMBER")));
+
+        variables.put("im", new Variable(null, "REAL_NUMBER"));
+        variables.get("im").setList(new ArrayList<String>(Arrays.asList("COMPLEX_NUMBER")));
+
+        variables.put("num", new Variable(null, "INTEGER"));
+        variables.get("num").setList(new ArrayList<String>(Arrays.asList("RATIONAL_NUMBER")));
+
+        variables.put("denom", new Variable(null, "INTEGER"));
+        variables.get("denom").setList(new ArrayList<String>(Arrays.asList("RATIONAL_NUMBER")));
+
+        variables.put("norm", new Variable(null, "RATIONAL_NUMBER"));
+        variables.get("norm").setList(new ArrayList<String>(Arrays.asList("RATIONAL_NUMBER")));
+
+        variables.put("compl", new Variable(null, "COMPLEX_NUMBER"));
+
+        variables.put("rat", new Variable(null, "RATIONAL_NUMBER"));
+
+        variables.put("length", new Variable(null, "INTEGER"));
     }
 }
