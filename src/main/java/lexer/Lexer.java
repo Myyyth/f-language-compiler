@@ -87,6 +87,9 @@ public class Lexer {
                     column += length;
                 }
             }
+            else {
+                column -= length;
+            }
         }
         return token;
     }
@@ -111,6 +114,9 @@ public class Lexer {
                     token = new RationalNumberToken(nextChar(start, length), row, column, length, numerator, denominator);
                     column += length;
                 }
+            }
+            else {
+                column -= length;
             }
         }
 
@@ -137,6 +143,9 @@ public class Lexer {
                     token = new RealNumberToken(nextChar(start, length), row, column, length, integerPart, mantissa);
                     column += length;
                 }
+            }
+            else {
+                column -= length;
             }
         }
 
@@ -324,7 +333,7 @@ public class Lexer {
             keyword = "if";
         else if (isNext(position, 4) && nextChar(position, 4).equals("then") && !isIdentidierPart(nextChar(position + 4)))
             keyword = "then";
-        else if (isNext(position, 4) && nextChar(position, 4).equals("then") && !isIdentidierPart(nextChar(position + 4)))
+        else if (isNext(position, 4) && nextChar(position, 4).equals("else") && !isIdentidierPart(nextChar(position + 4)))
             keyword = "else";
         else if (isNext(position, 3) && nextChar(position, 3).equals("for") && !isIdentidierPart(nextChar(position + 3)))
             keyword = "for";
@@ -384,7 +393,7 @@ public class Lexer {
     private Token parseWhiteSpaces(int position) {
         Token token = null;
         if (isNext(position) && nextChar(position) == '\t') {
-            token = new Token(Token.TokenType.WHITE_SPACE, "\t", row, column, 1);
+            token = new Token(Token.TokenType.WHITE_SPACE, "\\t", row, column, 1);
             column++;
         }
         else if (isNext(position) && nextChar(position) == '\r') {
@@ -392,8 +401,11 @@ public class Lexer {
             column++;
         }
         else if (isNext(position) && nextChar(position) == '\n') {
-            token = new Token(Token.TokenType.WHITE_SPACE, "\n", row, column, 1);
+            token = new Token(Token.TokenType.WHITE_SPACE, "\\n", row, column, 1);
             row++;
+        }
+        else if (isNext(position) && nextChar(position) == '\r') {
+            token = new Token(Token.TokenType.WHITE_SPACE, "\\r", row, column, 1);
             column = 0;
         }
         else if (isNext(position) && nextChar(position) == ' ') {

@@ -1,43 +1,139 @@
 package semantic;
 
-import semantic.Variable;
 import lexer.Token;
 import parser.Tree;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Semantic {
+public class SemanticForFunction {
     private ArrayList<Token> tokens;
     private int globalIterator;
     private Map<String, Variable> variables;
     private ArrayList<String> input = new ArrayList<String>();
     private Map<String, Variable> funcVariables = new HashMap<String, Variable>();
+    private ArrayList<String> iter = new ArrayList<String>();
 
-    public Semantic(ArrayList<Token> tokens) {
+    public SemanticForFunction(ArrayList<Token> tokens, Map<String, Variable> variables, Map<String, Variable> funcVariables) {
         this.tokens = tokens;
         this.globalIterator = 0;
-        this.variables = new HashMap<String, Variable>();
-        addFunctions();
-
+        this.variables = variables;
+        this.variables.putAll(funcVariables);
     }
 
     public String analyze() {
         deleteWhitespaces();
+        int sf = 0;
         while (globalIterator < tokens.size()) {
             if (tokens.get(globalIterator).getType().name().equals("IDENTIFIER")) {
                 String msg = checkInd();
                 if (msg != null) {
                     System.out.println("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + msg);
-                    System.exit(2);
+                    System.exit(1);
+                }
+            } else if (tokens.get(globalIterator).getType().name().equals("KEYWORD") &&
+                    tokens.get(globalIterator).getLexeme().equals("for")) {
+                String msg = checkFor();
+                if (msg != null) {
+                    return msg;
+                }
+            } else if (tokens.get(globalIterator).getType().name().equals("KEYWORD") &&
+                    tokens.get(globalIterator).getLexeme().equals("end")) {
+                if (!iter.get(iter.size() - 1).equals(""))
+                    variables.remove(iter.get(iter.size() - 1));
+                iter.remove(iter.size() - 1);
+                globalIterator++;
+            } else if (tokens.get(globalIterator).getType().name().equals("KEYWORD") &&
+                    tokens.get(globalIterator).getLexeme().equals("if")) {
+                String msg = checkIf();
+                if (msg != null) {
+                    return msg;
+                }
+                globalIterator++;
+            } else if (tokens.get(globalIterator).getType().name().equals("KEYWORD") &&
+                    tokens.get(globalIterator).getLexeme().equals("while")) {
+                String msg = checkWhile();
+                if (msg != null) {
+                    return msg;
+                }
+                globalIterator++;
+            } else if (tokens.get(globalIterator).getType().name().equals("KEYWORD") &&
+                    tokens.get(globalIterator).getLexeme().equals("return")) {
+                if (variables.get(tokens.get(globalIterator + 1).getLexeme()) != null)
+                    return variables.get(tokens.get(globalIterator + 1).getLexeme()).getType();
+                else return null;
+            } else if (tokens.get(globalIterator).getType().name().equals("KEYWORD") &&
+                    tokens.get(globalIterator).getLexeme().equals("print")) {
+                while (!tokens.get(globalIterator).getLexeme().equals(";")) {
+                    globalIterator++;
                 }
             } else {
                 globalIterator++;
             }
+
         }
         return "";
+    }
+
+    private String checkFor() {
+        globalIterator++;
+        String it = tokens.get(globalIterator).getLexeme();
+        iter.add(it);
+        if (variables.get(it) != null) {
+            return Integer.toString(tokens.get(globalIterator).getRow());
+        }
+        if (variables.get(tokens.get(globalIterator + 2).getLexeme()).getType().length() >= 5 &&
+                variables.get(tokens.get(globalIterator + 2).getLexeme()).getType().substring(0, 5).equals("ARRAY"))
+            variables.put(tokens.get(globalIterator).getLexeme(), new Variable(tokens.get(globalIterator),
+                    variables.get(tokens.get(globalIterator + 2).getLexeme()).getType().substring(5)));
+        else
+            variables.put(tokens.get(globalIterator).getLexeme(), new Variable(tokens.get(globalIterator),
+                    "INTEGER"));
+        globalIterator += 2;
+        if (!tokens.get(globalIterator).getType().name().equals("INTEGER") &&
+                variables.get(tokens.get(globalIterator).getLexeme()).getType().length() >= 5 &&
+                !variables.get(tokens.get(globalIterator).getLexeme()).getType().substring(0, 5).equals("ARRAY")) {
+            return Integer.toString(tokens.get(globalIterator).getRow());
+        }
+        return null;
+    }
+
+    private String checkWhile() {
+        globalIterator++;
+        iter.add("");
+        ArrayList<Token> expTokens = new ArrayList<Token>();
+        while (!tokens.get(globalIterator).getLexeme().equals("loop")) {
+            expTokens.add(tokens.get(globalIterator));
+            globalIterator++;
+        }
+        Tree types = checkExp(expTokens);
+        if (types == null) {
+            return Integer.toString(tokens.get(globalIterator).getRow());
+        }
+        String type = foundType(types);
+        if (type != "BOOLEAN") {
+            return Integer.toString(tokens.get(globalIterator).getRow());
+        }
+        return null;
+    }
+
+    private String checkIf() {
+        globalIterator++;
+        iter.add("");
+        ArrayList<Token> expTokens = new ArrayList<Token>();
+        while (!tokens.get(globalIterator).getLexeme().equals("then")) {
+            expTokens.add(tokens.get(globalIterator));
+            globalIterator++;
+        }
+        Tree types = checkExp(expTokens);
+        if (types == null) {
+            return Integer.toString(tokens.get(globalIterator).getRow());
+        }
+        String type = foundType(types);
+        if (type != "BOOLEAN") {
+            return Integer.toString(tokens.get(globalIterator).getRow());
+        }
+        return null;
     }
 
     private String checkInd() {
@@ -631,30 +727,5 @@ public class Semantic {
             }
         }
         this.tokens = modified;
-    }
-
-    private void addFunctions() {
-        variables.put("round", new Variable(null, "INTEGER"));
-
-        variables.put("re", new Variable(null, "REAL_NUMBER"));
-        variables.get("re").setList(new ArrayList<String>(Arrays.asList("COMPLEX_NUMBER")));
-
-        variables.put("im", new Variable(null, "REAL_NUMBER"));
-        variables.get("im").setList(new ArrayList<String>(Arrays.asList("COMPLEX_NUMBER")));
-
-        variables.put("num", new Variable(null, "INTEGER"));
-        variables.get("num").setList(new ArrayList<String>(Arrays.asList("RATIONAL_NUMBER")));
-
-        variables.put("denom", new Variable(null, "INTEGER"));
-        variables.get("denom").setList(new ArrayList<String>(Arrays.asList("RATIONAL_NUMBER")));
-
-        variables.put("norm", new Variable(null, "RATIONAL_NUMBER"));
-        variables.get("norm").setList(new ArrayList<String>(Arrays.asList("RATIONAL_NUMBER")));
-
-        variables.put("compl", new Variable(null, "COMPLEX_NUMBER"));
-
-        variables.put("rat", new Variable(null, "RATIONAL_NUMBER"));
-
-        variables.put("length", new Variable(null, "INTEGER"));
     }
 }

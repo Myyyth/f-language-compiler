@@ -15,7 +15,7 @@ public class Parser {
     public BalancedTree parse() {
         deleteWhitespaces();
         Tree tree = program();
-        BalancedTree balanced = new BalancedTree((int)Math.ceil(Math.log(tokens.size()) / Math.log(2)));
+        /*BalancedTree balanced = new BalancedTree((int)Math.ceil(Math.log(tokens.size()) / Math.log(2)));
         if (tree != null) {
             for (Token token: tokens) {
                 if (token.getLexeme().equals("+")) {
@@ -23,8 +23,8 @@ public class Parser {
                 }
                 balanced.insert(token);
             }
-        }
-        return balanced;
+        }*/
+        return tree;
     }
 
     private void deleteWhitespaces() {
@@ -1013,10 +1013,10 @@ public class Parser {
             return local;
         }
         globalIterator = localIterator;
-        /*local = loop();
+        local = loop();
         if (local != null) {
             return local;
-        }*/
+        }
         globalIterator = localIterator;
         local = declaration();
         if (local != null) {
@@ -1118,6 +1118,11 @@ public class Parser {
                 if (tokens.get(globalIterator).getLexeme().equals("end")) {
                     rightLocal.setValue(tokens.get(globalIterator));
                     local.setRight(rightLocal);
+                    globalIterator++;
+                    if (tokens.get(globalIterator).getLexeme().equals(";")) {
+                        return local;
+                    }
+                    globalIterator--;
                     return local;
                 }
                 globalIterator--;
@@ -1130,7 +1135,80 @@ public class Parser {
         return null;
     }
 
-//    private Tree loop() {
-//
-//    }
+    private Tree loop() {
+        int localIterator = globalIterator;
+        globalIterator++;
+        if (tokens.get(globalIterator).getLexeme().equals("for")) {
+            globalIterator++;
+            if (tokens.get(globalIterator).getType() == Token.TokenType.IDENTIFIER) {
+                globalIterator++;
+                if (tokens.get(globalIterator).getLexeme().equals("in")) {
+                } else {
+                    globalIterator--;
+                    return null;
+                }
+            } else {
+                globalIterator--;
+            }
+            localIterator = globalIterator;
+            if (expression() == null) {
+                globalIterator = localIterator;
+            }
+            globalIterator++;
+            if (tokens.get(globalIterator).getLexeme().equals("..")) {
+                localIterator = globalIterator;
+                if (expression() == null) {
+                    globalIterator = localIterator;
+                    return null;
+                }
+            } else {
+                globalIterator--;
+            }
+            localIterator = globalIterator;
+            if (loopBody() == null) {
+                globalIterator = localIterator;
+                return null;
+            }
+            return new Tree();
+        }
+        if (tokens.get(globalIterator).getLexeme().equals("while")) {
+            localIterator = globalIterator;
+            if (expression() == null) {
+                globalIterator = localIterator;
+                return null;
+            }
+        }
+        globalIterator--;
+        localIterator = globalIterator;
+        if (loopBody() == null) {
+            globalIterator = localIterator;
+            return null;
+        }
+        return new Tree();
+    }
+
+    private Tree loopBody() {
+        int localIterator = globalIterator;
+        globalIterator++;
+        if (tokens.get(globalIterator).getLexeme().equals("loop")) {
+            localIterator = globalIterator;
+            if (statements() == null) {
+                globalIterator = localIterator;
+                return null;
+            }
+            globalIterator++;
+            if (tokens.get(globalIterator).getLexeme().equals("end")) {
+                globalIterator++;
+                if (tokens.get(globalIterator).getLexeme().equals(";")) {
+                    return new Tree();
+                }
+                globalIterator--;
+                return new Tree();
+            }
+            globalIterator--;
+            return null;
+        }
+        globalIterator--;
+        return null;
+    }
 }
