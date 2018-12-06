@@ -1,31 +1,35 @@
+import bytecode_generator.CodeCompiler;
+import bytecode_generator.Interpreter;
 import lexer.Lexer;
 import lexer.Token;
 import parser.BalancedTree;
 import parser.Parser;
 import parser.Tree;
-import semantic.Semantic;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Scanner;
+import java.lang.reflect.Constructor;
+import java.util.concurrent.Callable;
 
 public class Main {
-    public static void main(String[] args) {
-        try {
-            String entireFileText = new Scanner(new File("input.f"))
-                    .useDelimiter("\\A").next();
-            ArrayList<Token> tokens = new Lexer(entireFileText).parse();
-            System.out.println(tokens);
-            Semantic s = new Semantic(tokens);
-            s.analyze();
-            Tree ast = new Parser(tokens).parse();
-            BalancedTree bt = new BalancedTree(4);
-            bt.getRoot().getLeft();
+    public static void main(String[] args) throws Exception {
+        String s = "b:integer is 1; d is func(a: func():integer):integer => b * 2 + a();\n";
+        String s1 = "b:integer is 5; d is func():integer do print(b); return 0; end; c:integer is d();";
 
-            System.out.println("sss");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        (new CodeCompiler()).compile("Run", s1);
+        (new Interpreter()).run("Run");
+    }
+
+    static void fun(Callable f) throws Exception {
+        f.call();
+    }
+
+    static void printHello(StringBuilder prep) {
+        prep.append("Hello");
+        System.out.println("hello");
     }
 }
+
+

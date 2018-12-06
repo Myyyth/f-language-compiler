@@ -1,5 +1,6 @@
 package semantic;
 
+import semantic.Variable;
 import lexer.Token;
 import parser.Tree;
 
