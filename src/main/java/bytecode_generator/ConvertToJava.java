@@ -480,7 +480,120 @@ public class ConvertToJava {
     private StringBuilder convertExpression() {
         StringBuilder code = new StringBuilder();
         while (!tokens.get(position).getLexeme().equals(";")) {
-            if (position+3 < tokens.size() && tokens.get(position+3).getLexeme().equals("[")) {
+            if (position+2 < tokens.size() && tokens.get(position).getType().equals(Token.TokenType.INTEGER)) {
+                if (tokens.get(position+1).getLexeme().equals("+")){
+                    if (tokens.get(position+2).getType().equals(Token.TokenType.RATIONAL_NUMBER)){
+                        String intNum = tokens.get(position).getLexeme();
+                        String ratNum = tokens.get(position+2).getLexeme();
+
+                        code.append("addIntRational(" + intNum + ", new Rational(" + convertRational(ratNum) +")).toString()");
+                        position += 3;
+                    }else if (tokens.get(position+2).getType().equals(Token.TokenType.COMPLEX_NUMBER)){
+                        String intNum = tokens.get(position).getLexeme();
+                        String compNum = tokens.get(position+2).getLexeme();
+                        String parts[] = compNum.split("i");
+                        String real = parts[0];
+                        String imag = parts[1];
+                        code.append("sumComplexWithIntFunc(new Complex(" + real + ", " + imag + "), " + intNum + ");");
+                    }
+                } else if (tokens.get(position+1).getLexeme().equals("*")){
+                    if (tokens.get(position+2).getType().equals(Token.TokenType.RATIONAL_NUMBER)) {
+                        String intNum = tokens.get(position).getLexeme();
+                        String ratNum = tokens.get(position + 2).getLexeme();
+                        String parts[] = ratNum.split("\\\\");
+                        String numer = parts[0];
+                        String denom = parts[1];
+                        code.append("multIntRational(" + intNum + ", new Rational(" + numer + ", " + denom + "))");
+                        position += 3;
+                    }
+                } else if (tokens.get(position+1).getLexeme().equals("-")){
+                    if (tokens.get(position+2).getType().equals(Token.TokenType.RATIONAL_NUMBER)) {
+                        String intNum = tokens.get(position).getLexeme();
+                        String ratNum = tokens.get(position + 2).getLexeme();
+                        String parts[] = ratNum.split("\\\\");
+                        String numer = parts[0];
+                        String denom = parts[1];
+                        code.append("subtractIntRational(" + intNum + ", new Rational(" + numer + ", " + denom + "))");
+                        position += 3;
+                    }
+                } else if (tokens.get(position+1).getLexeme().equals("/")){
+                    if (tokens.get(position+2).getType().equals(Token.TokenType.RATIONAL_NUMBER)) {
+                        String intNum = tokens.get(position).getLexeme();
+                        String ratNum = tokens.get(position + 2).getLexeme();
+                        String parts[] = ratNum.split("\\\\");
+                        String numer = parts[0];
+                        String denom = parts[1];
+                        code.append("divIntRational(" + intNum + ", new Rational(" + numer + ", " + denom + "))");
+                        position += 3;
+                    }
+                }
+            } else if (position+2 < tokens.size() && tokens.get(position).getType().equals(Token.TokenType.RATIONAL_NUMBER)) {
+                if (tokens.get(position+1).getLexeme().equals("+")) {
+                    if (tokens.get(position+2).getType().equals(Token.TokenType.INTEGER)){
+                        String ratNum = tokens.get(position).getLexeme();
+                        String intNum = tokens.get(position + 2).getLexeme();
+
+                        code.append("divIntRational(" + intNum + ", new Rational(" + ratNum + ")).toString()");
+                        position += 3;
+                    }else if (tokens.get(position+2).getType().equals(Token.TokenType.RATIONAL_NUMBER)){
+                        String ratNumA = tokens.get(position).getLexeme();
+                        String ratNumB = tokens.get(position + 2).getLexeme();
+                        String partsA[] = ratNumA.split("\\\\");
+                        String numerA = partsA[0];
+                        String denomA = partsA[1];
+                        String partsB[] = ratNumB.split("\\\\");
+                        String numerB = partsB[0];
+                        String denomB = partsB[1];
+                        code.append("divIntRational(new Rational(" + numerA + ", " + denomA + "), new Rational(" + numerB + ", " + denomB + "))");
+                        position += 3;
+                    }
+                } else if (tokens.get(position+1).getLexeme().equals("-")) {
+                    if (tokens.get(position+2).getType().equals(Token.TokenType.INTEGER)){
+                        String ratNum = tokens.get(position).getLexeme();
+                        String intNum = tokens.get(position + 2).getLexeme();
+                        String parts[] = ratNum.split("\\\\");
+                        String numer = parts[0];
+                        String denom = parts[1];
+                        code.append("subtractRationalInt(new Rational(" + numer + ", " + denom + "), " + intNum +")");
+                        position += 3;
+                    }else if (tokens.get(position+2).getType().equals(Token.TokenType.RATIONAL_NUMBER)){
+                        String ratNumA = tokens.get(position).getLexeme();
+                        String ratNumB = tokens.get(position + 2).getLexeme();
+                        String partsA[] = ratNumA.split("\\\\");
+                        String numerA = partsA[0];
+                        String denomA = partsA[1];
+                        String partsB[] = ratNumB.split("\\\\");
+                        String numerB = partsB[0];
+                        String denomB = partsB[1];
+                        code.append("subtractRationalRational(new Rational(" + numerA + ", " + denomA + "), new Rational(" + numerB + ", " + denomB + "))");
+                        position += 3;
+                    }
+                } else if (tokens.get(position+1).getLexeme().equals("*")) {
+                    if (tokens.get(position+2).getType().equals(Token.TokenType.INTEGER)){
+                        String ratNum = tokens.get(position).getLexeme();
+                        String intNum = tokens.get(position + 2).getLexeme();
+                        String parts[] = ratNum.split("\\\\");
+                        String numer = parts[0];
+                        String denom = parts[1];
+                        code.append("multRationalInt(new Rational(" + numer + ", " + denom + "), " + intNum +")");
+                        position += 3;
+                    }else if (tokens.get(position+2).getType().equals(Token.TokenType.RATIONAL_NUMBER)){
+                        String ratNumA = tokens.get(position).getLexeme();
+                        String ratNumB = tokens.get(position + 2).getLexeme();
+                        String partsA[] = ratNumA.split("\\\\");
+                        String numerA = partsA[0];
+                        String denomA = partsA[1];
+                        String partsB[] = ratNumB.split("\\\\");
+                        String numerB = partsB[0];
+                        String denomB = partsB[1];
+                        code.append("multRationalRational(new Rational(" + numerA + ", " + denomA + "), new Rational(" + numerB + ", " + denomB + "))");
+                        position += 3;
+                    }
+                }
+            } else if (position+2 < tokens.size() && tokens.get(position).getType().equals(Token.TokenType.COMPLEX_NUMBER)){
+
+            }
+            else if (position+3 < tokens.size() && tokens.get(position+3).getLexeme().equals("[")) {
                 position += 2;
                 String identifier = tokens.get(position).getLexeme();
                 position += 1;
@@ -573,5 +686,12 @@ public class ConvertToJava {
             }
         }
         this.tokens = modified;
+    }
+
+    private String convertRational(String s){
+        String[] res = s.split("\\\\");
+        String num = res[0];
+        String denom = res[1];
+        return "\"" + num + "\\\\" + denom + "\"";
     }
 }

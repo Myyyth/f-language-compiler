@@ -62,13 +62,21 @@ public class Mapper {
         return "class Rational {\n" +
                 "        public int num;\n" +
                 "        public int denom;\n" +
-                "        public Rational(int num, int denom) {\n" +
-                "            this.num = num;\n" +
-                "            this.denom = denom;\n" +
+                "        public Rational(String number) {\n" +
+                    "        String parts[] = number.split(\"\\\\\\\\\");\n" +
+                    "        String numer = parts[0];\n" +
+                    "        String denom = parts[1];" +
+                "            this.num = Integer.valueOf(numer);\n" +
+                "            this.denom = Integer.valueOf(denom);\n" +
                 "        }\n" +
+                "        public Rational(int num, int denom) {\n" +
+                "                            this.num = num;\n" +
+                "                            this.denom = denom;\n" +
+                "                       }\n" +
+
                 "@Override\n" +
                 "        public String toString() {\n" +
-                "            return String.valueOf(num) + \"/\" + String.valueOf(denom);\n" +
+                "            return String.valueOf(num) + \"\\\\\" + String.valueOf(denom);\n" +
                 "        }\n" +
                 "    }\n";
     }
