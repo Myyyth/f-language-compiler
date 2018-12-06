@@ -9,17 +9,16 @@ import parser.Tree;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        String s = "arr: [integer] is [1,2,3];";
+        String s = "b:integer is 1; d is func(a: func():integer):integer => b * 2 + a();\n";
+        String s1 = "b:integer is 5; d is func():integer do print(b); return 0; end; c:integer is d();";
 
-        Integer a = new Integer(10);
-        Double c = new Double(10);
-        System.out.println(a+c);
 
-        (new CodeCompiler()).compile("Run", s);
+        (new CodeCompiler()).compile("Run", s1);
         (new Interpreter()).run("Run");
     }
 
@@ -32,3 +31,5 @@ public class Main {
         System.out.println("hello");
     }
 }
+
+

@@ -38,7 +38,7 @@ public class CodeCompiler {
         }
 
         int compilationResult = compiler.run(null, null, null, sourceFile.toString());
-        Files.deleteIfExists(sourceFile);
+        //Files.deleteIfExists(sourceFile);
         if (compilationResult == 0) {
             System.out.println("Compilation is successful. Compiled class located in /target/src/...");
         } else {

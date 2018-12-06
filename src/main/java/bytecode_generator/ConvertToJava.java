@@ -18,9 +18,17 @@ public class ConvertToJava {
     }
 
     public String convert(String fileName) {
-        String source = "public class " + fileName + " implements Runnable {\n" +
+        String source = "import java.io.IOException;\n" +
+                "import java.lang.reflect.Constructor;\n" +
+                "import java.util.concurrent.Callable;\n" +
+                "public class " + fileName + " implements Runnable {\n" +
                 "  public void run() {\n" +
+                "  try {" +
                 convertTokens() +
+                "  } catch (Exception e) {}" +
+                "    }\n"
+
+                + "}\n" + // TODO add structure code
                 "    }\n" +
                 Mapper.addBooleanArrayArray() +
                 Mapper.addBooleanArrayEntity() +
@@ -155,6 +163,9 @@ public class ConvertToJava {
                 convertKeyword();
             }
             code.append(convertDeclarations());
+            if (position >= tokens.size()) {
+                break;
+            }
             if (tokens.get(position).getLexeme().equals(";"))
                 position++;
         }
@@ -261,34 +272,34 @@ public class ConvertToJava {
     private StringBuilder convertType(String identifier) {
         StringBuilder code = new StringBuilder();
         if (tokens.get(position).getLexeme().equals("integer")) {
-            code.append("Integer " + identifier + "= new Integer(" + convertExpression() + ");\n");
             types.put(identifier, "Integer");
-            position++;
+            position+=2;
+            code.append("Integer " + identifier + "= new Integer(" + convertExpression() + ");\n");
         }
         else if(tokens.get(position).getLexeme().equals("bool")) {
-            code.append("Boolean " + identifier + "= new Boolean(" + convertExpression() + ");\n");
             types.put(identifier, "Boolean");
-            position++;
+            position+=2;
+            code.append("Boolean " + identifier + "= new Boolean(" + convertExpression() + ");\n");
         }
         else if(tokens.get(position).getLexeme().equals("real")) {
-            code.append("Double " + identifier + "= new Double(" + convertExpression() + ");\n");
             types.put(identifier, "Double");
-            position++;
+            position+=2;
+            code.append("Double " + identifier + "= new Double(" + convertExpression() + ");\n");
         }
         else if(tokens.get(position).getLexeme().equals("rational")) {
-            code.append("Rational " + identifier + "= new Rational(" + convertExpression() + ");\n");
             types.put(identifier, "Rational");
-            position++;
+            position+=2;
+            code.append("Rational " + identifier + "= new Rational(" + convertExpression() + ");\n");
         }
         else if(tokens.get(position).getLexeme().equals("complex")) {
-            code.append("Comlex " + identifier + "= new Complex(" + convertExpression() + ");\n");
             types.put(identifier, "Complex");
-            position++;
+            position+=2;
+            code.append("Comlex " + identifier + "= new Complex(" + convertExpression() + ");\n");
         }
         else if(tokens.get(position).getLexeme().equals("string")) {
-            code.append("String " + identifier + "= new String(" + convertExpression() + ");\n");
             types.put(identifier, "String");
-            position++;
+            position+=2;
+            code.append("String " + identifier + "= new String(" + convertExpression() + ");\n");
         }
         else if (tokens.get(position).getLexeme().equals("[")) {
             position++;
@@ -299,7 +310,7 @@ public class ConvertToJava {
             }
             position++;
             StringBuilder elements = new StringBuilder("{");
-            while (!tokens.get(position).equals("]")) {
+            while (!tokens.get(position).getLexeme().equals("]")) {
                 if (tokens.get(position).getType() == Token.TokenType.PUNCTUATION) {
                     elements.append(tokens.get(position).getLexeme());
                 } else {
@@ -312,7 +323,8 @@ public class ConvertToJava {
                 }
             }
             elements.append("}");
-            code.append(arrType+"[] " + identifier + " = new "+arrType+"[]"+elements);
+            position++;
+            code.append(arrType+"[] " + identifier + " = new "+arrType+"[]"+elements+";\n");
         }
         else if(tokens.get(position).getLexeme().equals("is") && tokens.get(position+1).getLexeme().equals("func")) {
             position+=3;
@@ -324,15 +336,17 @@ public class ConvertToJava {
                 //Check func as param
                 if (tokens.get(pos_copy).getLexeme().equals(","))
                     pos_copy++;
+
                 paramsId.add(tokens.get(pos_copy).getLexeme());
-                pos_copy+=2;
+                pos_copy += 2;
+
                 if (tokens.get(pos_copy).getLexeme().equals("func")) {
-                    paramsType.add("func");
                     pos_copy += 2;
-                    while(tokens.get(pos_copy).getLexeme().equals(")")) {
+                    paramsType.add("paramFunc");
+                    while(!tokens.get(pos_copy).getLexeme().equals(")")) {
                         pos_copy++;
                     }
-                    pos_copy += 2;
+                    pos_copy += 3;
                 }
                 else {
                     paramsType.add(convertToJavaType(tokens.get(pos_copy).getLexeme()));
@@ -370,36 +384,93 @@ public class ConvertToJava {
             }
             code.append("class " + identifier + " implements Callable {\n");
             for (int i=0; i<paramsId.size(); i++) {
-                if (paramsType.get(i).equals("func")) {
-                    continue;
+                if (paramsType.get(i).equals("paramFunc")) {
+                    code.append("Callable " + paramsId.get(i) + ";\n");
                 }
-                code.append(paramsType.get(i) + " " + paramsId.get(i) + ";\n");
+                else {
+                    code.append(paramsType.get(i) + " " + paramsId.get(i) + ";\n");
+                }
             }
             code.append(identifier + "(");
             for (int i=0; i<paramsId.size(); i++) {
-                if (paramsType.get(i).equals("func")) {
-                    continue;
+                if (i != 0)
+                    code.append(", ");
+
+                if (paramsType.get(i).equals("paramFunc")) {
+                    code.append("Callable " + paramsId.get(i));
                 }
-                if (i==0)
+                else {
                     code.append(paramsType.get(i) + " " + paramsId.get(i));
-                else
-                    code.append(", " + paramsType.get(i) + " " + paramsId.get(i));
+                }
             }
             code.append(") {\n");
             for (int i=0; i<paramsId.size(); i++) {
-                if (paramsType.get(i).equals("func")) {
-                    continue;
-                }
                 code.append("this." + paramsId.get(i) + " = " + paramsId.get(i) + ";\n");
             }
             code.append("}\n");
             code.append("public " + returnType + " call() throws Exception {\n");
 
-            // TODO
-            code.append(convertExpression());
-            // code.append("System.out.println(\"Hello from function\");\n");
 
-            code.append("return null;\n}\n");
+            if (tokens.get(position).getLexeme().equals("=>")) {
+                position++;
+                code.append("return ");
+                while(!tokens.get(position).getLexeme().equals(";")) {
+                    // Closured identifiers
+                    if (tokens.get(position).getType().equals(Token.TokenType.IDENTIFIER) && !paramsId.contains(tokens.get(position).getLexeme())) {
+                        code.append(tokens.get(position).getLexeme()+identifier);
+                        position++;
+                    }
+                    else if (paramsId.contains(tokens.get(position).getLexeme()) && paramsType.get(paramsId.indexOf(tokens.get(position).getLexeme())).equals("paramFunc")) {
+                        code.append(returnType + ".valueOf(" + tokens.get(position).getLexeme() + ".call().toString())");
+                        position += 3;
+                    }
+                    else {
+                        code.append(tokens.get(position).getLexeme());
+                        position++;
+                    }
+                }
+                code.append(";");
+            }
+            else if (tokens.get(position).getLexeme().equals("do")) {
+                position++;
+                while(!tokens.get(position).getLexeme().equals("end")) {
+                    // Closured  identifiers
+                    if (tokens.get(position).getType().equals(Token.TokenType.IDENTIFIER) && !paramsId.contains(tokens.get(position).getLexeme())) {
+                        code.append(tokens.get(position).getLexeme()+identifier);
+                        position++;
+                    }
+                    else if (paramsId.contains(tokens.get(position).getLexeme()) && paramsType.get(paramsId.indexOf(tokens.get(position).getLexeme())).equals("paramFunc")) {
+                        code.append(tokens.get(position).getLexeme() + ".call()");
+                        position += 3;
+                    }
+                    else if (tokens.get(position).getLexeme().equals("print")) {
+                        position += 2;
+                        code.append("System.out.println(");
+                        while (!tokens.get(position).getLexeme().equals(")")) {
+                            if (identifiers.contains(tokens.get(position).getLexeme())) {
+                                code.append(tokens.get(position).getLexeme() + identifier);
+                            }
+                            else {
+                                code.append(tokens.get(position).getLexeme());
+                            }
+                            position++;
+                        }
+                        code.append(");\n");
+                        position+=2;
+                    }
+                    else if (tokens.get(position).getLexeme().equals("return")) {
+                        code.append("return ");
+                        position++;
+                    }
+                    else {
+                        code.append(tokens.get(position).getLexeme());
+                        position++;
+                    }
+                }
+                position++;
+            }
+
+            code.append("\n}\n");
             code.append("}\n");
 
         }
@@ -410,17 +481,37 @@ public class ConvertToJava {
     private StringBuilder convertExpression() {
         StringBuilder code = new StringBuilder();
         while (!tokens.get(position).getLexeme().equals(";")) {
-            if (!(tokens.get(position).getType().equals(Token.TokenType.IDENTIFIER) && tokens.get(position+1).getLexeme().equals("("))) {
+            if (position+3 < tokens.size() && tokens.get(position+3).getLexeme().equals("[")) {
+                position += 2;
+                String identifier = tokens.get(position).getLexeme();
+                position += 1;
+                StringBuilder index = convertExpression();
+                code.append(identifier+index);
+            }
+            else if (!(tokens.get(position).getType().equals(Token.TokenType.IDENTIFIER) && tokens.get(position+1).getLexeme().equals("("))) {
                 code.append(tokens.get(position).getLexeme());
                 position++;
             }
             else {
                 code.append("(new "+tokens.get(position).getLexeme()+"(");
-                position++;
-                while(tokens.get(position).getLexeme().equals(")")) {
-                    //
+                position+=2;
+                while(!tokens.get(position).getLexeme().equals(")")) {
+                    if (tokens.get(position).getLexeme().equals(",")) {
+                        position++;
+                    }
+                    if (types.get(tokens.get(position).getLexeme()).equals("func")) {
+                        position += 2;
+
+                    }
+                    else {
+                        code.append(tokens.get(position).getLexeme());
+                        position++;
+                        if (!tokens.get(position).getLexeme().equals(")"))
+                            code.append(", ");
+                    }
                 }
-                code.append(")");
+                code.append(")).call().toString()");
+                position++;
             }
         }
         return code;
