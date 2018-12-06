@@ -158,9 +158,6 @@ public class ConvertToJava {
         deleteWhitespaces();
         convertOperatorsToJava();
         while (position < tokens.size()) {
-            if (tokens.get(position).getType() == Token.TokenType.KEYWORD) {
-                convertKeyword();
-            }
             code.append(convertDeclarations());
             if (position >= tokens.size()) {
                 break;
@@ -192,6 +189,10 @@ public class ConvertToJava {
                 position++;
                 if (position >= tokens.size()) {
                     break;
+                }
+                if (tokens.get(position).getLexeme().equals("print")) {
+                    code.append("System.out.println(");
+                    position += 2;
                 }
                 code.append(convertExpression());
                 code.append(";\n");
@@ -235,6 +236,7 @@ public class ConvertToJava {
                         if (position >= tokens.size()) {
                             break;
                         }
+
                         code.append(convertExpression());
                         code.append(";\n");
                         position++;
@@ -249,6 +251,7 @@ public class ConvertToJava {
                 code.append("}\n");
             }
         }
+        position+=2;
         return code;
     }
 
@@ -414,7 +417,6 @@ public class ConvertToJava {
                 position++;
                 code.append("return ");
                 while(!tokens.get(position).getLexeme().equals(";")) {
-                    // Closured identifiers
                     if (tokens.get(position).getType().equals(Token.TokenType.IDENTIFIER) && !paramsId.contains(tokens.get(position).getLexeme())) {
                         code.append(tokens.get(position).getLexeme()+identifier);
                         position++;
@@ -434,15 +436,7 @@ public class ConvertToJava {
                 position++;
                 while(!tokens.get(position).getLexeme().equals("end")) {
                     // Closured  identifiers
-                    if (tokens.get(position).getType().equals(Token.TokenType.IDENTIFIER) && !paramsId.contains(tokens.get(position).getLexeme())) {
-                        code.append(tokens.get(position).getLexeme()+identifier);
-                        position++;
-                    }
-                    else if (paramsId.contains(tokens.get(position).getLexeme()) && paramsType.get(paramsId.indexOf(tokens.get(position).getLexeme())).equals("paramFunc")) {
-                        code.append(tokens.get(position).getLexeme() + ".call()");
-                        position += 3;
-                    }
-                    else if (tokens.get(position).getLexeme().equals("print")) {
+                    if (tokens.get(position).getLexeme().equals("print")) {
                         position += 2;
                         code.append("System.out.println(");
                         while (!tokens.get(position).getLexeme().equals(")")) {
@@ -457,9 +451,20 @@ public class ConvertToJava {
                         code.append(");\n");
                         position+=2;
                     }
+                    else if (tokens.get(position).getType().equals(Token.TokenType.IDENTIFIER) && !paramsId.contains(tokens.get(position).getLexeme())) {
+                        code.append(tokens.get(position).getLexeme()+identifier);
+                        position++;
+                    }
+                    else if (paramsId.contains(tokens.get(position).getLexeme()) && paramsType.get(paramsId.indexOf(tokens.get(position).getLexeme())).equals("paramFunc")) {
+                        code.append(tokens.get(position).getLexeme() + ".call()");
+                        position += 3;
+                    }
                     else if (tokens.get(position).getLexeme().equals("return")) {
                         code.append("return ");
                         position++;
+                    }
+                    else if (tokens.get(position).getType() == Token.TokenType.KEYWORD) {
+                        code.append(convertKeyword());
                     }
                     else {
                         code.append(tokens.get(position).getLexeme());
