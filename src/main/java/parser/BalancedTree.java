@@ -48,6 +48,7 @@ public class BalancedTree {
 
     private Node root;
     private int height;
+    private Node nextInsert;
 
     public BalancedTree(int height) {
         this.height = height;
@@ -81,18 +82,21 @@ public class BalancedTree {
         insert(temp, token);
     }
 
+    private Node leftmost(Node node) {
+        while (node.getLeft() != null) {
+            node = node.getLeft();
+        }
+        return node;
+    }
+
     private void insert(Node node, Token token) {
-        if (node.getValue() == null && (node.getLeft() == null || node.getLeft().getValue() != null)) {
+        if (node.getLeft() == null && node.getValue() == null) {
             node.setValue(token);
         } else {
-            if (node.getValue() == null && node.getLeft() != null) {
-                insert(node.getLeft(), token);
+            if (node.getLeft().getValue() != null && leftmost(node.getRight()).getValue() == null) {
+                node.setValue(token);
             } else {
-                if (node.getValue() != null && (node.getRight() != null && node.getRight().getValue() == null)) {
-                    insert(node.getRight(), token);
-                } else {
-                    insert(node.parent, token);
-                }
+
             }
         }
     }

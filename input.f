@@ -6,4 +6,3 @@ incGenerator is func() do
  end;
  return r;
 end
-

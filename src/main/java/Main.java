@@ -1,31 +1,34 @@
+import bytecode_generator.CodeCompiler;
+import bytecode_generator.Interpreter;
 import lexer.Lexer;
 import lexer.Token;
 import parser.BalancedTree;
 import parser.Parser;
 import parser.Tree;
-import semantic.Semantic;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.Callable;
 
 public class Main {
-    public static void main(String[] args) {
-        try {
-            String entireFileText = new Scanner(new File("input.f"))
-                    .useDelimiter("\\A").next();
-            ArrayList<Token> tokens = new Lexer(entireFileText).parse();
-            System.out.println(tokens);
-            Semantic s = new Semantic(tokens);
-            s.analyze();
-            Tree ast = new Parser(tokens).parse();
-            BalancedTree bt = new BalancedTree(4);
-            bt.getRoot().getLeft();
+    public static void main(String[] args) throws Exception {
+        String s = "arr: [integer] is [1,2,3];";
 
-            System.out.println("sss");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Integer a = new Integer(10);
+        Double c = new Double(10);
+        System.out.println(a+c);
+
+        (new CodeCompiler()).compile("Run", s);
+        (new Interpreter()).run("Run");
+    }
+
+    static void fun(Callable f) throws Exception {
+        f.call();
+    }
+
+    static void printHello(StringBuilder prep) {
+        prep.append("Hello");
+        System.out.println("hello");
     }
 }
