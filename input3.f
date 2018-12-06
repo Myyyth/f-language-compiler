@@ -1,10 +1,10 @@
-a:integer is 1;
-d is func(c: integer): integer
+powerOfTwo is func(c: integer, begin: integer): integer
 do
-    while c < 5 loop
-        print(c);
-        c := c + 1;
+    while c > 0 loop
+        begin := begin * 2;
+        c := c - 1;
     end;
+    print(begin);
     return 0;
 end;
-z:integer is d(a);
+z:integer is powerOfTwo(7, 1);

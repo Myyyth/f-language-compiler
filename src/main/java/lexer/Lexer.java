@@ -195,6 +195,7 @@ public class Lexer {
         }
 
         if (start != -1) {
+            length++;
             token = new Token(Token.TokenType.STRING, nextChar(start, length), row, column);
             column += length;
         }

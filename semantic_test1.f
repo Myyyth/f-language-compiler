@@ -1,1 +1,2 @@
-d is func(a: func():integer):integer => b * 2 + a(4);
+b: integer is 1;
+d is func(a: func():integer):integer => b * 2 + c(4);

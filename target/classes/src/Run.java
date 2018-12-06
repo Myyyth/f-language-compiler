@@ -3,17 +3,26 @@ import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
 public class Run implements Runnable {
   public void run() {
-  try {Integer b= new Integer(5);
-final Integer bd = b;
-class d implements Callable {
-d() {
+  try {Integer b= new Integer(1);
+class c implements Callable {
+c() {
 }
 public Integer call() throws Exception {
-System.out.println(bd);
+System.out.println("Hello from c");
 return 0;
 }
 }
-Integer c= new Integer((new d()).call().toString());
+class d implements Callable {
+Callable a;
+d(Callable a) {
+this.a = a;
+}
+public Integer call() throws Exception {
+System.out.println("Run in d");
+a.call();return 0;
+}
+}
+Integer e= new Integer((new d(new c())).call().toString());
   } catch (Exception e) {}    }
 public boolean[] addBooleanArrayArray(boolean[] a, boolean[] b) {
         int lenA = a.length;

@@ -21,7 +21,7 @@ public class SemanticForFunction {
         this.variables.putAll(funcVariables);
     }
 
-    public String analyze() {
+    public String analyze() throws Exception {
         deleteWhitespaces();
         int sf = 0;
         while (globalIterator < tokens.size()) {
@@ -106,7 +106,7 @@ public class SemanticForFunction {
         return null;
     }
 
-    private String checkWhile() {
+    private String checkWhile() throws Exception {
         globalIterator++;
         iter.add("");
         ArrayList<Token> expTokens = new ArrayList<Token>();
@@ -125,7 +125,7 @@ public class SemanticForFunction {
         return null;
     }
 
-    private String checkIf() {
+    private String checkIf() throws Exception {
         globalIterator++;
         iter.add("");
         ArrayList<Token> expTokens = new ArrayList<Token>();
@@ -144,14 +144,14 @@ public class SemanticForFunction {
         return null;
     }
 
-    private String checkInd() {
+    private String checkInd() throws Exception {
         int ind = globalIterator;
         globalIterator++;
         if (tokens.get(globalIterator).getLexeme().equals("is")) {
             globalIterator++;
             Tree types = checkExp(new ArrayList<Token>());
             if (types == null) {
-                return Integer.toString(tokens.get(globalIterator).getRow() + 1);
+                throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + Integer.toString(tokens.get(globalIterator).getRow() + 1));
             }
             String type = foundType(types);
             if (type != null) {
@@ -162,18 +162,18 @@ public class SemanticForFunction {
                         return type;
                     }
             } else {
-                return Integer.toString(tokens.get(globalIterator).getRow() + 1);
+                throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + Integer.toString(tokens.get(globalIterator).getRow() + 1));
             }
         } else if (tokens.get(globalIterator).getLexeme().equals(":")) {
             if (variables.get(tokens.get(globalIterator - 1).getLexeme()) != null) {
-                return Integer.toString(tokens.get(globalIterator - 1).getRow() + 1);
+                throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + Integer.toString(tokens.get(globalIterator-1).getRow() + 1));
             }
             globalIterator++;
             String oType = hardType(tokens.get(globalIterator).getLexeme());
             globalIterator += 2;
             Tree types = checkExp(new ArrayList<Token>());
             if (types == null) {
-                return Integer.toString(tokens.get(globalIterator).getRow() + 1);
+                throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + Integer.toString(tokens.get(globalIterator).getRow() + 1));
             }
             String type = foundType(types);
             if (type != null && ((type.equals(oType) || (oType.equals("REAL_NUMBER") && type.equals("INTEGER"))))) {
@@ -183,29 +183,29 @@ public class SemanticForFunction {
                     return type;
                 }
             } else {
-                return Integer.toString(tokens.get(globalIterator).getRow() + 1);
+                throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + Integer.toString(tokens.get(globalIterator).getRow() + 1));
             }
         } else if (tokens.get(globalIterator).getLexeme().equals(":=")) {
             if (variables.get(tokens.get(ind).getLexeme()) == null) {
-                return Integer.toString(tokens.get(globalIterator).getRow() + 1);
+                throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + Integer.toString(tokens.get(globalIterator).getRow() + 1));
             }
             String oType = variables.get(tokens.get(ind).getLexeme()).getType();
             globalIterator++;
             Tree types = checkExp(new ArrayList<Token>());
             if (types == null) {
-                return Integer.toString(tokens.get(globalIterator).getRow() + 1);
+                throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + Integer.toString(tokens.get(globalIterator).getRow() + 1));
             }
             String type = foundType(types);
             if (type != null && ((type.equals(oType) || (oType.equals("REAL_NUMBER") && type.equals("INTEGER"))))) {
                 return null;
             } else {
-                return Integer.toString(tokens.get(globalIterator).getRow() + 1);
+                throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + Integer.toString(tokens.get(globalIterator).getRow() + 1));
             }
         }
         return null;
     }
 
-    public Tree checkExp(ArrayList<Token> expTokens) {
+    public Tree checkExp(ArrayList<Token> expTokens) throws Exception {
         if (tokens.get(globalIterator).getLexeme().equals("func")) {
             return checkFunction();
         }
@@ -282,9 +282,8 @@ public class SemanticForFunction {
                         if (variables.get(expTokens.get(i).getLexeme()) != null)
                             input.add(variables.get(expTokens.get(i).getLexeme()).getType());
                         else {
-                            System.out.println("y Bac oLLlu6Ka(HeOnPEgE/|EHHA9 nEPEMEHHA9) Ha CTPOKE HOMEP " +
+                            throw new Exception("y Bac oLLlu6Ka(HeOnPEgE/|EHHA9 nEPEMEHHA9) Ha CTPOKE HOMEP " +
                                     Integer.toString(expTokens.get(i).getRow() + 1));
-                            System.exit(2);
                         }
                     } else {
                         input.add(expTokens.get(i).getType().name());
@@ -344,15 +343,13 @@ public class SemanticForFunction {
                 if (input.size() == predInput.size()) {
                     for (int j = 0; j < input.size(); j++) {
                         if (input.get(j) != predInput.get(j)) {
-                            System.out.println("y Bac oLLlu6Ka(HeCoBnageHue TunoB) Ha CTPOKE HOMEP " +
+                            throw  new Exception("y Bac oLLlu6Ka(HeCoBnageHue TunoB) Ha CTPOKE HOMEP " +
                                     Integer.toString(expTokens.get(globalIterator).getRow() + 1));
-                            System.exit(2);
                         }
                     }
                 } else {
-                    System.out.println("y Bac oLLlu6Ka(HeCoBnageHue TunoB) Ha CTPOKE HOMEP " +
-                            Integer.toString(expTokens.get(globalIterator).getRow() + 1));
-                    System.exit(2);
+                    throw  new Exception("y Bac oLLlu6Ka(HeCoBnageHue TunoB nAPAMETPOB u/|u uX ko/|u4ecTBa) Ha CTPOKE HOMEP " +
+                            Integer.toString(expTokens.get(i).getRow() + 1));
                 }
                 tree.setValue(val);
                 return tree;
@@ -366,16 +363,14 @@ public class SemanticForFunction {
                 i += 2;
                 if (expTokens.get(i).getType().name().equals("IDENTIFIER")) {
                     if (!variables.get(expTokens.get(i).getLexeme()).getType().equals("INTEGER")) {
-                        System.out.println("HenPaBu/|Huu` Tun uTePaToPA Ha CTPOKE HOMEP " +
+                        throw  new Exception("HenPaBu/|Huu` Tun uTePaToPA Ha CTPOKE HOMEP " +
                                 Integer.toString(expTokens.get(i).getRow()));
-                        System.exit(2);
 
                     }
                 }
                 if (!expTokens.get(i).getType().name().equals("INTEGER")) {
-                    System.out.println("HenPaBu/|Huu` Tun uTePaToPA Ha CTPOKE HOMEP " +
+                    throw  new Exception("HenPaBu/|Huu` Tun uTePaToPA Ha CTPOKE HOMEP " +
                             Integer.toString(expTokens.get(i).getRow()));
-                    System.exit(2);
                 }
                 i = t;
                 if (variables.get(expTokens.get(i).getLexeme()).getType().substring(5).equals("INTEGER"))
@@ -411,9 +406,8 @@ public class SemanticForFunction {
                         }
                     } else newType = expTokens.get(i).getType().name();
                     if (!type.equals("") && !type.equals(newType)) {
-                        System.out.println("OLLlu6KA B MACCuBE Ha CTPOKE HOMEP " +
+                        throw  new Exception("OLLlu6KA B MACCuBE Ha CTPOKE HOMEP " +
                                 Integer.toString(expTokens.get(i).getRow()));
-                        System.exit(2);
                     } else type = newType;
                     i++;
                 }
@@ -442,9 +436,8 @@ public class SemanticForFunction {
                         (funcVariables.get(expTokens.get(i).getLexeme()) != null &&
                                 funcVariables.get(expTokens.get(i).getLexeme()).getInput() != null) &&
                                 variables.get(expTokens.get(i).getLexeme()).getInput().size() > 0) {
-                    System.out.println("HeOnPEgE/|EHHA9 nEPEMEHHA9 Ha CTPOKE HOMEP " +
+                    throw  new Exception("HeOnPEgE/|EHHA9 nEPEMEHHA9 Ha CTPOKE HOMEP " +
                             Integer.toString(expTokens.get(i).getRow()));
-                    System.exit(2);
                 }
                 tree.setValue(expTokens.get(i));
                 return tree;
@@ -454,7 +447,7 @@ public class SemanticForFunction {
         return null;
     }
 
-    private Tree checkFunction() {
+    private Tree checkFunction() throws Exception {
         int ind = globalIterator - 2;
         globalIterator += 1;
         Map<String, Variable> localVariables = new HashMap<String, Variable>();
@@ -571,6 +564,9 @@ public class SemanticForFunction {
     }
 
     private String answerType(String type, String left, String right) {
+        if (right == null || left == null){
+            return null;
+        }
         if (type == "+" || type == "-" || type == "*") {
             if (right.substring(0, 5).equals("ARRAY") && right.equals(left)) {
                 return right;

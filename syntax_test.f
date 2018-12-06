@@ -4,7 +4,7 @@ do
         begin := begin * 2;
         c := c - 1;
     end;
-    print(begin);
+    print(begin)
     return 0;
 end;
 z:integer is powerOfTwo(5, 1);

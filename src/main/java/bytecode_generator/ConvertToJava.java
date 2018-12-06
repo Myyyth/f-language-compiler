@@ -616,9 +616,9 @@ public class ConvertToJava {
                     if (tokens.get(position).getLexeme().equals(",")) {
                         position++;
                     }
-                    if (types.get(tokens.get(position).getLexeme()).equals("func")) {
-                        position += 2;
-
+                    if (types.containsKey(tokens.get(position).getLexeme()) && types.get(tokens.get(position).getLexeme()).equals("func")) {
+                        code.append("new " + tokens.get(position).getLexeme() + "()");
+                        position += 1;
                     }
                     else {
                         code.append(tokens.get(position).getLexeme());
