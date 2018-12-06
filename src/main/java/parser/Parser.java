@@ -12,7 +12,7 @@ public class Parser {
         this.globalIterator = -1;
     }
 
-    public BalancedTree parse() {
+    public Tree parse() {
         deleteWhitespaces();
         Tree tree = program();
         /*BalancedTree balanced = new BalancedTree((int)Math.ceil(Math.log(tokens.size()) / Math.log(2)));
