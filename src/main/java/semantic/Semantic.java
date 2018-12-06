@@ -30,9 +30,9 @@ public class Semantic {
             if (tokens.get(globalIterator).getType().name().equals("IDENTIFIER")) {
                 String msg = checkInd();
                 if (msg != null) {
-                    System.out.println("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + msg);
-                    System.exit(2);
-                    //throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + msg);
+//                    System.out.println("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + msg);
+//                    System.exit(2);
+                    throw  new Exception("y Bac oLLlu6Ka Ha CTPOKE HOMEP " + msg);
                 }
             } else {
                 globalIterator++;

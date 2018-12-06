@@ -296,7 +296,7 @@ public class ConvertToJava {
         else if(tokens.get(position).getLexeme().equals("complex")) {
             types.put(identifier, "Complex");
             position+=2;
-            code.append("Comlex " + identifier + "= new Complex(" + convertExpression() + ");\n");
+            code.append("Complex " + identifier + "= new Complex(" + convertExpression() + ");\n");
         }
         else if(tokens.get(position).getLexeme().equals("string")) {
             types.put(identifier, "String");
@@ -484,6 +484,7 @@ public class ConvertToJava {
 
     private StringBuilder convertExpression() {
         StringBuilder code = new StringBuilder();
+
         while (!tokens.get(position).getLexeme().equals(";")) {
             if (position+2 < tokens.size() && tokens.get(position).getType().equals(Token.TokenType.INTEGER)
                     && tokens.get(position+1).getLexeme().equals("+") && tokens.get(position+2).getType().equals(Token.TokenType.RATIONAL_NUMBER) ) {
@@ -597,6 +598,10 @@ public class ConvertToJava {
                         position += 3;
                     }
                 }
+            }
+            else if (tokens.get(position).getType().equals(Token.TokenType.COMPLEX_NUMBER)) {
+                code.append("\"" + tokens.get(position).getLexeme() + "\"");
+                position++;
             }
             else if (position+3 < tokens.size() && tokens.get(position+3).getLexeme().equals("[")) {
                 position += 2;

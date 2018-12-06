@@ -6,11 +6,19 @@ public class Mapper {
                 "        public double real;\n" +
                 "        public double imaginary;\n" +
                 "\n" +
-                "        public Complex() { }\n" +
+                "        public Complex(String comp) {\n" +
+                "           String[] s = comp.split(\"i\");\n" +
+                "           this.real = Double.valueOf(s[0]);\n" +
+                "           this.imaginary = Double.valueOf(s[1]);\n" +
+                "        }\n" +
                 "\n" +
                 "        public Complex(double real, double imaginary) {\n" +
                 "            this.real = real;\n" +
                 "            this.imaginary = imaginary;\n" +
+                "        }\n" +
+                "@Override\n" +
+                "        public String toString() {\n" +
+                "            return String.valueOf(real) + \"i\" + String.valueOf(imaginary);\n" +
                 "        }\n" +
                 "    }\n";
     }

@@ -23,14 +23,22 @@ import java.util.List;
 
 public class CodeCompiler {
     public void compile(String fileName, String sourceCode) throws Exception {
-        Lexer lexer = new Lexer(new StringBuilder(sourceCode));
-        ArrayList<Token> tokens = lexer.parse();
-        if (new Parser(tokens).parse() == null) {
-            throw new Exception("Syntax error");
-        };
-        Lexer lexer2 = new Lexer(new StringBuilder(sourceCode));
-        new Semantic(lexer2.parse()).analyze();
-        String classDef = new ConvertToJava(tokens).convert(fileName);
+        String classDef = "";
+        try {
+            Lexer lexer = new Lexer(new StringBuilder(sourceCode));
+            ArrayList<Token> tokens = lexer.parse();
+            if (new Parser(tokens).parse() == null) {
+                throw new Exception("Syntax error");
+            }
+            ;
+            Lexer lexer2 = new Lexer(new StringBuilder(sourceCode));
+            new Semantic(lexer2.parse()).analyze();
+            classDef = new ConvertToJava(tokens).convert(fileName);
+        } catch(Exception e) {
+            System.out.println("Compilation failed: ");
+            System.out.println(e.getMessage());
+            System.exit(2);
+        }
 
         String directoryName = "target/classes/src/";
         Path sourceFile = Paths.get(directoryName + "/" + fileName + ".java");
