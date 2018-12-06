@@ -1,1 +1,1 @@
-b:[integer] is [1, 2, 3.5];
+b:[integer] is [1, 2, 3.5]
