@@ -15,7 +15,7 @@ public class Parser {
     public BalancedTree parse() {
         deleteWhitespaces();
         Tree tree = program();
-        BalancedTree balanced = new BalancedTree((int)Math.ceil(Math.log(tokens.size()) / Math.log(2)));
+        /*BalancedTree balanced = new BalancedTree((int)Math.ceil(Math.log(tokens.size()) / Math.log(2)));
         if (tree != null) {
             for (Token token: tokens) {
                 if (token.getLexeme().equals("+")) {
@@ -23,8 +23,8 @@ public class Parser {
                 }
                 balanced.insert(token);
             }
-        }
-        return balanced;
+        }*/
+        return tree;
     }
 
     private void deleteWhitespaces() {
