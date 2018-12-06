@@ -14,13 +14,16 @@ import java.util.concurrent.Callable;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        String s = "b:integer is 1; d is func(a: func():integer):integer => b * 2 + a();\n";
-        String s1 = "b:integer is 5; d is func():integer do print(b); return 0; end; c:integer is d();";
-        String s2 = "a:integer is 1; d is func(c: integer): integer do while c < 5 loop print(c); c := c + 1; end; return 0; end; z:integer is d(a);";
-        String s4 = "a:rational is 2+1\\4; b is func():integer do print(a); return 0; end; c:integer is b();";
+        try {
+            String entireFileText = new Scanner(new File("input1.f"))
+                    .useDelimiter("\\A").next();
 
-        (new CodeCompiler()).compile("Run", s1);
-        (new Interpreter()).run("Run");
+            (new CodeCompiler()).compile("Run", entireFileText);
+            (new Interpreter()).run("Run");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     static void fun(Callable f) throws Exception {

@@ -889,6 +889,7 @@ public class Parser {
                             return null;
                         }
                         local.setRight(rightLocal);
+                        return local;
                     }
                     globalIterator--;
                     return local;

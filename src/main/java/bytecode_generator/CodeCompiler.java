@@ -1,6 +1,9 @@
 package bytecode_generator;
 
 import lexer.Lexer;
+import lexer.Token;
+import parser.Parser;
+import semantic.Semantic;
 
 import javax.tools.*;
 import java.io.ByteArrayOutputStream;
@@ -20,7 +23,12 @@ import java.util.List;
 
 public class CodeCompiler {
     public void compile(String fileName, String sourceCode) throws Exception {
-        String classDef = new ConvertToJava(new Lexer(new StringBuilder(sourceCode)).parse()).convert(fileName);
+        ArrayList<Token> tokens = new Lexer(new StringBuilder(sourceCode)).parse();
+        if (new Parser(tokens).parse() == null) {
+            throw new Exception("Syntax error");
+        };
+        new Semantic(new ArrayList<Token>(tokens)).analyze();
+        String classDef = new ConvertToJava(tokens).convert(fileName);
 
         String directoryName = "target/classes/src/";
         Path sourceFile = Paths.get(directoryName + "/" + fileName + ".java");
