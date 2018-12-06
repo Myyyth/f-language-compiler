@@ -26,7 +26,7 @@ public class CodeCompiler {
         Lexer lexer = new Lexer(new StringBuilder(sourceCode));
         ArrayList<Token> tokens = lexer.parse();
         if (new Parser(tokens).parse() == null) {
-            throw new Exception("Syntax error");
+            System.out.println("Syntax error");
         };
         Lexer lexer2 = new Lexer(new StringBuilder(sourceCode));
         new Semantic(lexer2.parse()).analyze();
