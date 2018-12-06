@@ -1,15 +1,19 @@
 import bytecode_generator.CodeCompiler;
 import bytecode_generator.Interpreter;
-import jdk.nashorn.internal.codegen.CompilerConstants;
 import lexer.Lexer;
+import lexer.Token;
+import parser.BalancedTree;
+import parser.Parser;
+import parser.Tree;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-
         String s = "b:integer is 1; d is func(a: func():integer):integer => b * 2 + a();\n";
         String s1 = "b:integer is 5; d is func():integer do print(b); return 0; end; c:integer is d();";
 
