@@ -270,9 +270,36 @@ public class Semantic {
             }
         }
         for (int i = 0; i < expTokens.size(); i++) {
-            String t = expTokens.get(i).getLexeme();
+            int t = i;
             if (expTokens.get(i).getType().name().equals("IDENTIFIER") &&
-                    i != expTokens.size() - 1 && expTokens.get(i + 1).getLexeme().equals("(")) {
+                    i != expTokens.size() - 1 && expTokens.get(i + 1).getLexeme().equals("[")) {
+                Token val = expTokens.get(i);
+                i+=2;
+                if (expTokens.get(i).getType().name().equals("IDENTIFIER")){
+                    if (!variables.get(expTokens.get(i).getLexeme()).getType().equals("INTEGER")){
+                        System.out.println("NEPRAVILNII TIP ITERATIRA");
+                        System.exit(1);
+                    }
+                }
+                if (!expTokens.get(i).getType().name().equals("INTEGER")){
+                    System.out.println("NEPRAVILNII TIP ITERATIRA");
+                    System.exit(1);
+                }
+                i = t;
+                if (variables.get(expTokens.get(i).getLexeme()).getType().substring(5).equals("INTEGER"))
+                    expTokens.get(i).setType(Token.TokenType.INTEGER);
+                if (variables.get(expTokens.get(i).getLexeme()).getType().substring(5).equals("REAL_NUMBER"))
+                    expTokens.get(i).setType(Token.TokenType.REAL_NUMBER);
+                if (variables.get(expTokens.get(i).getLexeme()).getType().substring(5).equals("BOOLEAN"))
+                    expTokens.get(i).setType(Token.TokenType.BOOLEAN);
+                if (variables.get(expTokens.get(i).getLexeme()).getType().substring(5).equals("COMPLEX_NUMBER"))
+                    expTokens.get(i).setType(Token.TokenType.COMPLEX_NUMBER);
+                if (variables.get(expTokens.get(i).getLexeme()).getType().substring(5).equals("RATIONAL_NUMBER"))
+                    expTokens.get(i).setType(Token.TokenType.RATIONAL_NUMBER);
+                if (variables.get(expTokens.get(i).getLexeme()).getType().substring(5).equals("STRING"))
+                    expTokens.get(i).setType(Token.TokenType.STRING);
+                tree.setValue(expTokens.get(i));
+                return tree;
             }
         }
         for (int i = 0; i < expTokens.size(); i++) {
