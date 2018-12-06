@@ -28,7 +28,8 @@ public class CodeCompiler {
         if (new Parser(tokens).parse() == null) {
             throw new Exception("Syntax error");
         };
-        new Semantic(lexer.parse()).analyze();
+        Lexer lexer2 = new Lexer(new StringBuilder(sourceCode));
+        new Semantic(lexer2.parse()).analyze();
         String classDef = new ConvertToJava(tokens).convert(fileName);
 
         String directoryName = "target/classes/src/";

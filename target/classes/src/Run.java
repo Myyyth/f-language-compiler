@@ -3,17 +3,17 @@ import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
 public class Run implements Runnable {
   public void run() {
-  try {Rational a= new Rational(addIntRational(2, new Rational("1\\4")).toString());
-final Rational ab = a;
-class b implements Callable {
-b() {
+  try {Integer b= new Integer(5);
+final Integer bd = b;
+class d implements Callable {
+d() {
 }
 public Integer call() throws Exception {
-System.out.println(ab);
+System.out.println(bd);
 return 0;
 }
 }
-Integer c= new Integer((new b()).call().toString());
+Integer c= new Integer((new d()).call().toString());
   } catch (Exception e) {}    }
 public boolean[] addBooleanArrayArray(boolean[] a, boolean[] b) {
         int lenA = a.length;

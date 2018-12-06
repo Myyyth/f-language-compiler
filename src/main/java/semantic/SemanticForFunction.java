@@ -61,7 +61,15 @@ public class SemanticForFunction {
                     tokens.get(globalIterator).getLexeme().equals("return")) {
                 if (variables.get(tokens.get(globalIterator + 1).getLexeme()) != null)
                     return variables.get(tokens.get(globalIterator + 1).getLexeme()).getType();
-                else return null;
+                else{
+                    String t = tokens.get(globalIterator+1).getType().name();
+                    if (t.equals("INTEGER") || t.equals("REAL_NUMBER") || t.equals("BOOLEAN") ||
+                            t.equals("COMPLEX_NUMBER") || t.equals("RATIONAL_NUMBER") || t.equals("STRING")){
+                        return t;
+                    }
+                    else return null;
+                }
+
             } else if (tokens.get(globalIterator).getType().name().equals("KEYWORD") &&
                     tokens.get(globalIterator).getLexeme().equals("print")) {
                 while (!tokens.get(globalIterator).getLexeme().equals(";")) {

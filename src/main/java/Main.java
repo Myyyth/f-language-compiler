@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 public class Main {
     public static void main(String[] args) throws Exception {
         try {
-            String entireFileText = new Scanner(new File("input4.f"))
+            String entireFileText = new Scanner(new File("input1.f"))
                     .useDelimiter("\\A").next();
 
             (new CodeCompiler()).compile("Run", entireFileText);

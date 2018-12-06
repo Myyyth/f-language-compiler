@@ -1,0 +1,1 @@
+d is func(a: func():integer):integer => b * 2 + a(4);
