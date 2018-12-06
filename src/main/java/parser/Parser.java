@@ -945,6 +945,9 @@ public class Parser {
                 globalIterator--;
                 return null;
             }
+            if (tokens.get(globalIterator).getLexeme().equals("]")) {
+                return new Tree();
+            }
             globalIterator--;
             return null;
         }
