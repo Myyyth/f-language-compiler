@@ -3,17 +3,26 @@ import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
 public class Run implements Runnable {
   public void run() {
-  try {Complex a= new Complex("1i2");
-final Complex ab = a;
-class b implements Callable {
-b() {
+  try {Integer b= new Integer(1);
+class c implements Callable {
+c() {
 }
 public Integer call() throws Exception {
-System.out.println(ab);
+System.out.println("Hello from c");
 return 0;
 }
 }
-Integer c= new Integer((new b()).call().toString());
+class d implements Callable {
+Callable a;
+d(Callable a) {
+this.a = a;
+}
+public Integer call() throws Exception {
+System.out.println("Run in d");
+a.call();return 0;
+}
+}
+Integer e= new Integer((new d(new c())).call().toString());
   } catch (Exception e) {}    }
 public boolean[] addBooleanArrayArray(boolean[] a, boolean[] b) {
         int lenA = a.length;
@@ -595,19 +604,11 @@ class Complex {
         public double real;
         public double imaginary;
 
-        public Complex(String comp) {
-           String[] s = comp.split("i");
-           this.real = Double.valueOf(s[0]);
-           this.imaginary = Double.valueOf(s[1]);
-        }
+        public Complex() { }
 
         public Complex(double real, double imaginary) {
             this.real = real;
             this.imaginary = imaginary;
-        }
-@Override
-        public String toString() {
-            return String.valueOf(real) + "i" + String.valueOf(imaginary);
         }
     }
 class Rational {

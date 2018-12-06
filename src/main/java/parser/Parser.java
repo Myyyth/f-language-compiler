@@ -1004,6 +1004,14 @@ public class Parser {
 
     private Tree statement() {
         int localIterator = globalIterator;
+        if (tokens.get(globalIterator+2).getLexeme().equals(":") || tokens.get(globalIterator+2).getLexeme().equals("is")) {
+            Tree local = declaration();
+            if (local != null) {
+                return local;
+            } else {
+                globalIterator = localIterator;
+            }
+        }
         Tree local = assignmentOrCall();
         if (local != null) {
             return local;
@@ -1015,11 +1023,6 @@ public class Parser {
         }
         globalIterator = localIterator;
         local = loop();
-        if (local != null) {
-            return local;
-        }
-        globalIterator = localIterator;
-        local = declaration();
         if (local != null) {
             return local;
         }

@@ -1,10 +1,4 @@
-powerOfTwo is func(c: integer, begin: integer): integer
+a is func():integer
 do
-    while c > 0 loop
-        begin := begin * 2;
-        c := c - 1;
-    end;
-    print(begin);
-    return 0;
+    b is func():integer do print("ok"); end;
 end;
-z:integer is powerOfTwo(5, 1);
